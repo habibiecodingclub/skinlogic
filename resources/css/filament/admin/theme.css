@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+@import '../../../../vendor/filament/filament/resources/css/base.css';
+
+@config 'tailwind.config.js';
+
+.fi-sidebar-header, .fi-topbar nav{
+    background-color: #203158 !important;
+}
+
+.btn-login {
+
+    background-color: #203158 !important;
+}
+
