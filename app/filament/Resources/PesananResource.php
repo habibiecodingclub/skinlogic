@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Exports\PesananExport;
 use App\Filament\Resources\PesananResource\Pages;
 use App\Models\Pesanan;
 use App\Models\Produk;
@@ -20,6 +19,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\HtmlString;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\Placeholder;
 
 class PesananResource extends Resource
 {
@@ -32,113 +33,242 @@ class PesananResource extends Resource
     protected static ?string $pluralModelLabel = 'Pesanan';
 
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            Select::make('pelanggan_id')
-                ->relationship('pelanggan', 'Nama')
-                ->label('Pelanggan')
-                ->required(),
-            Select::make("Metode_Pembayaran")
-                ->options([
-                    "Cash" => "Cash",
-                    "QRIS" => "QRIS",
-                    "Debit" => "Debit"
-                ]),
+    {
+        return $form
+            ->schema([
+                Select::make('pelanggan_id')
+                    ->relationship('pelanggan', 'Nama')
+                    ->label('Pelanggan')
+                    ->required(),
+                Select::make("Metode_Pembayaran")
+                    ->options([
+                        "Cash" => "Cash",
+                        "QRIS" => "QRIS",
+                        "Debit" => "Debit"
+                    ]),
 
-            // Repeater untuk Produk
-            Repeater::make('detailProduk')
-                ->label('Produk')
-                ->relationship()
-                ->schema([
-                    Select::make('produk_id')
-                        ->label('Produk')
-                        ->options(Produk::query()->pluck('Nama', 'id'))
-                        ->searchable()
-                        ->required()
-                        ->live()
-                        ->preload()
-                        ->afterStateUpdated(function ($state, Set $set, $get) {
-                            $product = Produk::find($state);
-                            $harga = $product?->Harga ?? 0;
-                            $set('harga', $harga);
-                            // Hapus set subtotal karena tidak disimpan di database
-                        }),
-                    TextInput::make('qty')
-                        ->label('Jumlah')
-                        ->numeric()
-                        ->minValue(1)
-                        ->default(1)
-                        ->live()
-                        ->afterStateUpdated(function ($state, Set $set, $get) {
-                            $hargaSatuan = $get('harga') ?? 0;
-                            // Hapus set subtotal karena tidak disimpan di database
-                        })
-                        ->required(),
-                    TextInput::make('harga')
-                        ->label("Harga Satuan")
-                        ->numeric()
-                        ->prefix("Rp. ")
-                        ->readOnly(),
-                    // HAPUS field subtotal karena tidak ada di database
-                    // TextInput::make('subtotal')
-                    //     ->label("Subtotal")
-                    //     ->numeric()
-                    //     ->prefix("Rp. ")
-                    //     ->readOnly(),
-                ])
-                ->addActionLabel('Tambah Produk')
-                ->columnSpanFull(),
+                // Repeater untuk Produk
+                Repeater::make('detailProduk')
+                    ->label('Produk')
+                    ->relationship()
+                    ->schema([
+                        Select::make('produk_id')
+                            ->label('Produk')
+                            ->options(Produk::query()->pluck('Nama', 'id'))
+                            ->searchable()
+                            ->required()
+                            ->live()
+                            ->preload()
+                            ->afterStateUpdated(function ($state, Set $set, $get) {
+                                try {
+                                    $product = Produk::find($state);
+                                    if ($product) {
+                                        $set('harga', $product->Harga);
+                                        $set('stok_available', $product->Stok);
+                                    } else {
+                                        $set('harga', 0);
+                                        $set('stok_available', 0);
+                                        Notification::make()
+                                            ->title('Produk tidak ditemukan')
+                                            ->danger()
+                                            ->send();
+                                    }
+                                } catch (\Exception $e) {
+                                    Notification::make()
+                                        ->title('Error')
+                                        ->body('Terjadi kesalahan saat memuat data produk')
+                                        ->danger()
+                                        ->send();
+                                }
+                            }),
+                        TextInput::make('qty')
+                            ->label('Jumlah')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function ($state, Set $set, $get) {
+                                $produkId = $get('produk_id');
+                                $stokAvailable = $get('stok_available');
 
-            // Repeater untuk Perawatan
-            Repeater::make('detailPerawatan')
-                ->label('Perawatan')
-                ->relationship()
-                ->schema([
-                    Select::make('perawatan_id')
-                        ->label('Perawatan')
-                        ->options(Perawatan::query()->pluck('Nama_Perawatan', 'id'))
-                        ->searchable()
-                        ->required()
-                        ->live()
-                        ->preload()
-                        ->afterStateUpdated(function ($state, Set $set, $get) {
-                            $service = Perawatan::find($state);
-                            $harga = $service?->Harga ?? 0;
-                            $set('harga', $harga);
-                            // Hapus set subtotal
-                        }),
-                    TextInput::make('qty')
-                        ->label('Jumlah')
-                        ->numeric()
-                        ->minValue(1)
-                        ->default(1)
-                        ->live()
-                        ->afterStateUpdated(function ($state, Set $set, $get) {
-                            $hargaSatuan = $get('harga') ?? 0;
-                            // Hapus set subtotal
-                        })
-                        ->required(),
-                    TextInput::make('harga')
-                        ->label("Harga Satuan")
-                        ->numeric()
-                        ->prefix("Rp. ")
-                        ->readOnly(),
-                    // HAPUS field subtotal
-                    // TextInput::make('subtotal')
-                    //     ->label("Subtotal")
-                    //     ->numeric()
-                    //     ->prefix("Rp. ")
-                    //     ->readOnly(),
-                ])
-                ->addActionLabel('Tambah Perawatan')
-                ->columnSpanFull(),
-        ]);
-}
+                                if ($produkId && $stokAvailable !== null) {
+                                    if ($state > $stokAvailable) {
+                                        $set('qty', $stokAvailable);
+
+                                        Notification::make()
+                                            ->title('Stok Tidak Cukup')
+                                            ->body("Stok produk hanya tersedia {$stokAvailable} unit")
+                                            ->danger()
+                                            ->send();
+                                    }
+                                }
+                            })
+                            ->rules([
+                                function ($get) {
+                                    return function (string $attribute, $value, $fail) use ($get) {
+                                        $produkId = $get('produk_id');
+                                        if ($produkId) {
+                                            $produk = Produk::find($produkId);
+                                            if ($produk && $value > $produk->Stok) {
+                                                $fail("Stok {$produk->Nama} hanya tersedia {$produk->Stok} unit");
+                                                Notification::make()
+                                                    ->title('Stok Tidak Cukup')
+                                                    ->danger()
+                                                    ->send();
+                                            }
+                                        }
+                                    };
+                                },
+                            ]),
+                        TextInput::make('harga')
+                            ->label("Harga Satuan")
+                            ->numeric()
+                            ->prefix("Rp. ")
+                            ->default(function ($get) {
+                                $produkId = $get('produk_id');
+                                if ($produkId) {
+                                    return Produk::find($produkId)->Harga;
+                                }
+                                return 0;
+                            })
+                            ->readOnly(),
+                        TextInput::make('stok_available')
+                            ->hidden()
+                            ->default(0),
+                    ])
+                    ->addActionLabel('Tambah Produk')
+                    ->columnSpanFull()
+                    ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
+                        if (isset($data['produk_id']) && isset($data['qty'])) {
+                            $produk = Produk::find($data['produk_id']);
+                            if ($produk) {
+                                if ($data['qty'] > $produk->Stok) {
+                                    Notification::make()
+                                        ->title('Stok Tidak Cukup')
+                                        ->body("Stok {$produk->Nama} hanya tersedia {$produk->Stok} unit")
+                                        ->danger()
+                                        ->persistent()
+                                        ->send();
+
+                                    throw new \Exception("Stok {$produk->Nama} tidak mencukupi");
+                                }
+
+                                $produk->decrement('Stok', $data['qty']);
+
+                                Notification::make()
+                                    ->title('Stok Berhasil Dikurangi')
+                                    ->body("Stok {$produk->Nama} berkurang {$data['qty']} unit")
+                                    ->success()
+                                    ->send();
+                            }
+                        }
+                        return $data;
+                    }),
+
+                // Repeater untuk Perawatan
+                Repeater::make('detailPerawatan')
+                    ->label('Perawatan')
+                    ->relationship()
+                    ->schema([
+                        Select::make('perawatan_id')
+                            ->label('Perawatan')
+                            ->options(Perawatan::query()->pluck('Nama_Perawatan', 'id'))
+                            ->searchable()
+                            ->required()
+                            ->live()
+                            ->preload()
+                            ->afterStateUpdated(function ($state, Set $set, $get) {
+                                try {
+                                    $service = Perawatan::find($state);
+                                    if ($service) {
+                                        $set('harga', $service->Harga);
+                                    } else {
+                                        $set('harga', 0);
+                                        Notification::make()
+                                            ->title('Perawatan tidak ditemukan')
+                                            ->danger()
+                                            ->send();
+                                    }
+                                } catch (\Exception $e) {
+                                    Notification::make()
+                                        ->title('Error')
+                                        ->body('Terjadi kesalahan saat memuat data perawatan')
+                                        ->danger()
+                                        ->send();
+                                }
+                            }),
+                        TextInput::make('qty')
+                            ->label('Jumlah')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->required(),
+                        TextInput::make('harga')
+                            ->label("Harga Satuan")
+                            ->numeric()
+                            ->prefix("Rp. ")
+                            ->default(function ($get) {
+                                $perawatanId = $get('perawatan_id');
+                                if ($perawatanId) {
+                                    return Perawatan::find($perawatanId)->Harga;
+                                }
+                                return 0;
+                            })
+                            ->readOnly(),
+                    ])
+                    ->addActionLabel('Tambah Perawatan')
+                    ->columnSpanFull(),
+
+                // Grand Total
+                Placeholder::make('grand_total')
+                    ->label('GRAND TOTAL')
+                    ->content(function ($get) {
+                        $totalProduk = 0;
+                        $totalPerawatan = 0;
+
+                        // Hitung total produk
+                        $detailProduk = $get('detailProduk');
+                        if (is_array($detailProduk)) {
+                            foreach ($detailProduk as $item) {
+                                if (isset($item['harga']) && isset($item['qty'])) {
+                                    $totalProduk += ($item['harga'] * $item['qty']);
+                                }
+                            }
+                        }
+
+                        // Hitung total perawatan
+                        $detailPerawatan = $get('detailPerawatan');
+                        if (is_array($detailPerawatan)) {
+                            foreach ($detailPerawatan as $item) {
+                                if (isset($item['harga']) && isset($item['qty'])) {
+                                    $totalPerawatan += ($item['harga'] * $item['qty']);
+                                }
+                            }
+                        }
+
+                        $grandTotal = $totalProduk + $totalPerawatan;
+
+                        return new HtmlString('
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <h3 class="text-lg font-bold text-blue-900 text-center">
+                                    GRAND TOTAL: Rp. ' . number_format($grandTotal, 0, ",", ".") . '
+                                </h3>
+                                <div class="grid grid-cols-2 gap-4 mt-2 text-sm text-blue-800">
+                                    <div>Total Produk: Rp. ' . number_format($totalProduk, 0, ",", ".") . '</div>
+                                    <div>Total Perawatan: Rp. ' . number_format($totalPerawatan, 0, ",", ".") . '</div>
+                                </div>
+                            </div>
+                        ');
+                    })
+                    ->columnSpanFull(),
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Pesanan::with(['detailProduk.produk', 'detailPerawatan.perawatan']))
             ->columns([
                 TextColumn::make('pelanggan.Nama')
                     ->label('Pelanggan')
@@ -176,13 +306,7 @@ class PesananResource extends Resource
             ->filters([
                 //
             ])
-            ->headerActions([
-                // Tables\Actions\ExportAction::make()->exports([
-                //     new PesananExport()
-                // ])->label('Download')
-            ])
             ->actions([
-                // Tombol View Detail
                 Action::make('view')
                     ->label('View Detail')
                     ->icon('heroicon-o-eye')
@@ -279,16 +403,17 @@ class PesananResource extends Resource
                                 ' : '') . '
 
                                 <div class="bg-blue-50 p-4 rounded-lg">
-                                    <h3 class="font-semibold text-lg text-blue-900">Total Pembayaran: Rp. ' . number_format($total, 0, ",", ".") . '</h3>
+                                    <h3 class="font-semibold text-lg text-blue-900">GRAND TOTAL: Rp. ' . number_format($total, 0, ",", ".") . '</h3>
+                                    <div class="grid grid-cols-2 gap-4 mt-2 text-sm text-blue-800">
+                                        <div>Total Produk: Rp. ' . number_format($totalProduk, 0, ",", ".") . '</div>
+                                        <div>Total Perawatan: Rp. ' . number_format($totalPerawatan, 0, ",", ".") . '</div>
+                                    </div>
                                 </div>
                             </div>
                         ');
                     })
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Tutup'),
-
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -316,11 +441,10 @@ class PesananResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['pelanggan']);
-    }
-
-    protected function getTableQuery(): Builder
-    {
-        return parent::getTableQuery()->with(['detailProduk.produk', 'detailPerawatan.perawatan']);
+            ->with([
+                'pelanggan',
+                'detailProduk.produk',
+                'detailPerawatan.perawatan'
+            ]);
     }
 }

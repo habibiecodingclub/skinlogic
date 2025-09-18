@@ -61,21 +61,21 @@ class PelangganStats extends BaseWidget
 
         $query = PesananProduk::query()
             ->when($days, function ($q) use ($days) {
-                $q->whereDate('created_at', '>=', now()->subDays($days));
+            $q->whereDate('created_at', '>=', now()->subDays($days));
             });
 
-        $total = $query->sum(DB::raw('qty * harga'));
-        $rangeLabel = $days ? "Last {$days} days" : "All time";
+            $total = $query->sum(DB::raw('qty * harga'));
+            $rangeLabel = $days ? "Last {$days} days" : "All time";
 
-        return Stat::make('Total Income', 'IDR ' . number_format($total ?? 0, 0, ',', '.'))
+            return Stat::make('Total Income', 'IDR ' . number_format($total ?? 0, 0, ',', '.'))
             ->description($rangeLabel)
             ->icon('heroicon-o-chart-pie')
             ->color('primary')
             ->chart($this->getTotalIncomeChart($days))
-            ->extraAttributes([
-                'class' => 'bg-gradient-to-br from-purple-50/50 to-purple-100/50 p-4 rounded-lg',
-            ]);
-    }
+->extraAttributes([
+'class' => 'bg-gradient-to-br from-purple-50/50 to-purple-100/50 p-4 rounded-lg',
+]);
+}
 
     protected function getDailyChart(): array
     {
