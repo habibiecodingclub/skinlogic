@@ -22,7 +22,7 @@ class ProdukFactory extends Factory
             "Nomor_SKU" => fake()->uuid(),
             "Nama" => fake()->word(),
             "Harga" => fake()->randomNumber(5, true),
-            "Stok" => fake()->randomDigit()
+            "Stok" => 100
         ];
     }
 }

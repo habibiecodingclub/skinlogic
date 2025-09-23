@@ -10,6 +10,8 @@ use App\Filament\Widgets\PelangganStats;
 use App\Filament\Widgets\PemasukanStats;
 use App\Filament\Widgets\ProdukTerlarisTable;
 use App\Filament\Widgets\StatsOverview;
+use App\Filament\Widgets\StokOverview;
+use App\Models\StokMovement;
 use Doctrine\DBAL\Schema\Schema;
 use EightyNine\FilamentAdvancedWidget\AdvancedChartWidget;
 use Filament\Facades\Filament;
@@ -57,7 +59,8 @@ class AdminPanelProvider extends PanelProvider
                 // Widgets\FilamentInfoWidget::class,
                 PelangganStats::class,
                 PelangganLoyalTable::class,
-                ProdukTerlarisTable::class
+                ProdukTerlarisTable::class,
+                StokOverview::class
 
                 // PemasukanStats::class,
                 // StatsOverview::class,

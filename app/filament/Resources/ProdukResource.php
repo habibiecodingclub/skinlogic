@@ -4,11 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProdukResource\Pages;
 use App\Filament\Resources\ProdukResource\RelationManagers;
+use App\Filament\Resources\ProdukResource\RelationManagers\StokMovementsRelationManager;
 use App\Models\Produk;
 use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -70,7 +72,7 @@ class ProdukResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            StokMovementsRelationManager::class
         ];
     }
 
