@@ -9,6 +9,7 @@ use App\Models\Produk;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,20 +18,36 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+          $adminRole   = Role::firstOrCreate(['name' => 'admin']);
+        $managerRole = Role::firstOrCreate(['name' => 'manajer']);
+        $kasirRole   = Role::firstOrCreate(['name' => 'kasir']);
 
-        User::factory()->create([
-            'name' => 'admin',
+        // Buat user + assign role
+        $admin = User::factory()->create([
+            'name' => 'Admin User',
             'email' => 'admin@gmail.com',
-            'password' => 'admin',
+            'password' => bcrypt('admin'), // gunakan bcrypt
         ]);
+        $admin->assignRole($adminRole);
 
+        $manager = User::factory()->create([
+            'name' => 'Manajer User',
+            'email' => 'manajer@gmail.com',
+            'password' => bcrypt('manajer'),
+        ]);
+        $manager->assignRole($managerRole);
+
+        $kasir = User::factory()->create([
+            'name' => 'Kasir User',
+            'email' => 'kasir@gmail.com',
+            'password' => bcrypt('kasir'),
+        ]);
+        $kasir->assignRole($kasirRole);
+
+        // Data dummy lain
         Pelanggan::factory()->count(10)->create();
-
         Produk::factory()->count(10)->create();
-
         Perawatan::factory()->count(5)->create();
-
         Pesanan::factory()->count(30)->create();
     }
 }

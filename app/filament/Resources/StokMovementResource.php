@@ -170,4 +170,11 @@ class StokMovementResource extends Resource
             'edit' => Pages\EditStokMovement::route('/{record}/edit'),
         ];
     }
+
+
+    public static function shouldRegisterNavigation(): bool
+{
+    return auth()->user()->hasRole('kasir') || auth()->user()->hasAnyRole(['admin', 'manajer']); // abaikan error ini, cuman error di intellisense
+}
+
 }

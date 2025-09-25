@@ -6,6 +6,7 @@ use App\Filament\Resources\PesananResource\Pages;
 use App\Models\Pesanan;
 use App\Models\Produk;
 use App\Models\Perawatan;
+// use Filament\Actions\ExportAction;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -21,6 +22,8 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\Placeholder;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 
 class PesananResource extends Resource
 {
@@ -362,6 +365,12 @@ class PesananResource extends Resource
                             }
                         }),
                 ]),
+
+            ])
+            ->headerActions([
+                ExportAction::make()->exports([
+                    ExcelExport::make()->fromTable()
+                ])->label('Download')
             ]);
     }
 
@@ -388,4 +397,9 @@ class PesananResource extends Resource
                 'detailPerawatan.perawatan'
             ]);
     }
+    public static function shouldRegisterNavigation(): bool
+{
+ return auth()->user()->hasRole('kasir') || auth()->user()->hasAnyRole(['admin', 'manajer']); // abaikan error ini, cuman error di intellisense
+}
+
 }

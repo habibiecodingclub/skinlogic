@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\LoginUser;
+use Illuminate\Support\Facades\Auth;
 use App\Filament\Widgets\AdvancedStatsOverviewWidget;
 use App\Filament\Widgets\MonthlyUsersChart;
 use App\Filament\Widgets\PelangganLoyalTable;
@@ -25,6 +26,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
+use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -33,6 +35,7 @@ use Illuminate\Session\Middleware\StartSession;
 
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Psy\Output\Theme;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -80,6 +83,7 @@ class AdminPanelProvider extends PanelProvider
 
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ;
     }
 }

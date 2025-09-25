@@ -143,4 +143,9 @@ class LaporanStokResource extends Resource
             // HAPUS detail page untuk sementara
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->hasRole('kasir') || auth()->user()->hasAnyRole(['admin', 'manajer']);
+    }
 }

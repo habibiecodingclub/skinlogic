@@ -322,4 +322,9 @@ class PerawatanResource extends Resource
             'edit' => Pages\EditPerawatan::route('/{record}/edit'),
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->hasRole('kasir') || auth()->user()->hasAnyRole(['admin', 'manajer']);
+    }
 }
