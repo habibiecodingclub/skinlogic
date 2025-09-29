@@ -15,11 +15,11 @@ class PesananPerawatan extends Model
 
     public function perawatan(): BelongsTo
     {
-        return $this->belongsTo(Perawatan::class);
+        return $this->belongsTo(Perawatan::class, 'perawatan_id')->withTrashed();
     }
 
     public function pesanan(): BelongsTo
     {
-        return $this->belongsTo(Pesanan::class);
+        return $this->belongsTo(Pesanan::class, 'pesanan_id');
     }
 }

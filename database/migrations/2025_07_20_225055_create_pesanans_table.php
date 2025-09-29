@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("pelanggan_id")->constrained()->cascadeOnDelete();
             $table->enum('Metode_Pembayaran', ['Cash', 'QRIS', 'Debit']);
+            $table->enum('status', ['Berhasil', 'Dibatalkan'])->default('Berhasil');
             $table->timestamps();
         });
     }

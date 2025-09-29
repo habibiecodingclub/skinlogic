@@ -21,7 +21,7 @@ class ProdukPolicy
      */
     public function view(User $user, Produk $produk): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -37,7 +37,8 @@ class ProdukPolicy
      */
     public function update(User $user, Produk $produk): bool
     {
-        return false;
+
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -45,7 +46,8 @@ class ProdukPolicy
      */
     public function delete(User $user, Produk $produk): bool
     {
-        return false;
+
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -53,7 +55,7 @@ class ProdukPolicy
      */
     public function restore(User $user, Produk $produk): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -61,6 +63,6 @@ class ProdukPolicy
      */
     public function forceDelete(User $user, Produk $produk): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 }

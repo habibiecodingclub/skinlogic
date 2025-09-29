@@ -6,17 +6,11 @@ use App\Filament\Resources\ProdukResource\Pages;
 use App\Filament\Resources\ProdukResource\RelationManagers;
 use App\Filament\Resources\ProdukResource\RelationManagers\StokMovementsRelationManager;
 use App\Models\Produk;
-use Filament\Actions\DeleteAction;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 
@@ -24,7 +18,7 @@ class ProdukResource extends Resource
 {
     protected static ?string $model = Produk::class;
 
-    protected static ?string $navigationIcon = 'heroicon-m-shopping-cart';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $pluralModelLabel = "Produk";
 
@@ -32,10 +26,42 @@ class ProdukResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make("Nomor_SKU"), // sementara, buatkan nanti fungsi yang bisa generate uuid yang unik,
-                TextInput::make("Nama"),
-                TextInput::make("Harga"),
-                TextInput::make("Stok"),
+                Forms\Components\TextInput::make("Nomor_SKU")
+                    ->label('SKU')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make("Nama")
+                    ->label('Nama Produk')
+                    ->required()
+                    ->maxLength(255),
+
+Forms\Components\TextInput::make("Harga")
+    ->label('Harga')
+    ->required()
+    ->numeric()
+    ->prefix('Rp')
+    ->minValue(0)
+    ->maxValue(999999999999)
+    ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : '')
+    ->dehydrateStateUsing(function ($state) {
+        // Hanya convert jika state adalah string dengan format
+        if (is_string($state) && str_contains($state, '.')) {
+            return (int) str_replace('.', '', $state);
+        }
+        return (int) $state;
+    })
+    ->helperText('Masukkan angka tanpa titik (contoh: 1000000)')
+    ->placeholder('0'),
+
+
+                Forms\Components\TextInput::make("Stok")
+                    ->label('Stok')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->default(0),
             ]);
     }
 
@@ -43,24 +69,37 @@ class ProdukResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make("Nomor_SKU"),
-                TextColumn::make("Nama")->searchable(),
-                TextColumn::make("Harga")->state(function ($record){
-                    $format = number_format($record->Harga, 0 , '.', ',');
-                    return "Rp. " . (string) $format;
-                }),
-                TextColumn::make("Stok"),
+                Tables\Columns\TextColumn::make("Nomor_SKU")
+                    ->label('SKU')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make("Nama")
+                    ->label('Nama Produk')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make("Harga")
+                    ->label('Harga')
+                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make("Stok")
+                    ->label('Stok')
+                    ->numeric()
+                    ->sortable(),
             ])
             ->filters([
+                // Filters could be added later
             ])
             ->headerActions([
-                ExportAction::make()->exports([
-                    ExcelExport::make()->fromTable()
-                ])->label('download')
+                // ExportAction::make()->exports([
+                //     ExcelExport::make()->fromTable()
+                // ])->label('Download Excel')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

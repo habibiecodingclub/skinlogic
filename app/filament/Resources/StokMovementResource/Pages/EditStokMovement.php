@@ -10,10 +10,13 @@ class EditStokMovement extends EditRecord
 {
     protected static string $resource = StokMovementResource::class;
 
-    protected function getHeaderActions(): array
+    protected function mutateFormDataBeforeSave(array $data): array
     {
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        $originalData = $this->record->toArray();
+
+        // Handle update stok movement (lebih kompleks, perlu adjust stok)
+        // Untuk sementara, lebih baik nonaktifkan edit atau handle dengan hati-hati
+
+        return $data;
     }
 }

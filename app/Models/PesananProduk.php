@@ -14,69 +14,69 @@ class PesananProduk extends Model
 
     protected $guarded = [];
 
-    // Event boot untuk handle stok via StokMovement
-    protected static function boot()
-    {
-        parent::boot();
+    // // Event boot untuk handle stok via StokMovement
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        // Saat pesanan produk dibuat, buat stok movement
-        static::created(function ($pesananProduk) {
-            $produk = $pesananProduk->produk;
+    //     // Saat pesanan produk dibuat, buat stok movement
+    //     static::created(function ($pesananProduk) {
+    //         $produk = $pesananProduk->produk;
 
-            if ($produk) {
-                // Buat stok movement untuk penjualan
-                \App\Models\StokMovement::create([
-                    'produk_id' => $produk->id,
-                    'tipe' => 'keluar',
-                    'jumlah' => $pesananProduk->qty,
-                    'keterangan' => "Penjualan pesanan #{$pesananProduk->pesanan_id}",
-                    'tanggal' => now(),
-                ]);
-            }
-        });
+    //         if ($produk) {
+    //             // Buat stok movement untuk penjualan
+    //             \App\Models\StokMovement::create([
+    //                 'produk_id' => $produk->id,
+    //                 'tipe' => 'keluar',
+    //                 'jumlah' => $pesananProduk->qty,
+    //                 'keterangan' => "Penjualan pesanan #{$pesananProduk->pesanan_id}",
+    //                 'tanggal' => now(),
+    //             ]);
+    //         }
+    //     });
 
-        // Saat pesanan produk diupdate, update stok movement
-        static::updated(function ($pesananProduk) {
-            $originalQty = $pesananProduk->getOriginal('qty');
-            $newQty = $pesananProduk->qty;
+    //     // Saat pesanan produk diupdate, update stok movement
+    //     static::updated(function ($pesananProduk) {
+    //         $originalQty = $pesananProduk->getOriginal('qty');
+    //         $newQty = $pesananProduk->qty;
 
-            if ($newQty != $originalQty) {
-                $produk = $pesananProduk->produk;
+    //         if ($newQty != $originalQty) {
+    //             $produk = $pesananProduk->produk;
 
-                if ($produk) {
-                    // Hapus movement lama dan buat baru
-                    \App\Models\StokMovement::where('keterangan', "Penjualan pesanan #{$pesananProduk->pesanan_id}")
-                        ->where('produk_id', $produk->id)
-                        ->delete();
+    //             if ($produk) {
+    //                 // Hapus movement lama dan buat baru
+    //                 \App\Models\StokMovement::where('keterangan', "Penjualan pesanan #{$pesananProduk->pesanan_id}")
+    //                     ->where('produk_id', $produk->id)
+    //                     ->delete();
 
-                    // Buat movement baru dengan quantity yang updated
-                    \App\Models\StokMovement::create([
-                        'produk_id' => $produk->id,
-                        'tipe' => 'keluar',
-                        'jumlah' => $newQty,
-                        'keterangan' => "Penjualan pesanan #{$pesananProduk->pesanan_id}",
-                        'tanggal' => now(),
-                    ]);
-                }
-            }
-        });
+    //                 // Buat movement baru dengan quantity yang updated
+    //                 \App\Models\StokMovement::create([
+    //                     'produk_id' => $produk->id,
+    //                     'tipe' => 'keluar',
+    //                     'jumlah' => $newQty,
+    //                     'keterangan' => "Penjualan pesanan #{$pesananProduk->pesanan_id}",
+    //                     'tanggal' => now(),
+    //                 ]);
+    //             }
+    //         }
+    //     });
 
-        // Saat pesanan produk dihapus, buat stok movement pengembalian
-        static::deleted(function ($pesananProduk) {
-            $produk = $pesananProduk->produk;
+    //     // Saat pesanan produk dihapus, buat stok movement pengembalian
+    //     static::deleted(function ($pesananProduk) {
+    //         $produk = $pesananProduk->produk;
 
-            if ($produk) {
-                // Buat stok movement untuk pengembalian
-                \App\Models\StokMovement::create([
-                    'produk_id' => $produk->id,
-                    'tipe' => 'masuk',
-                    'jumlah' => $pesananProduk->qty,
-                    'keterangan' => "Pembatalan pesanan #{$pesananProduk->pesanan_id}",
-                    'tanggal' => now(),
-                ]);
-            }
-        });
-    }
+    //         if ($produk) {
+    //             // Buat stok movement untuk pengembalian
+    //             \App\Models\StokMovement::create([
+    //                 'produk_id' => $produk->id,
+    //                 'tipe' => 'masuk',
+    //                 'jumlah' => $pesananProduk->qty,
+    //                 'keterangan' => "Pembatalan pesanan #{$pesananProduk->pesanan_id}",
+    //                 'tanggal' => now(),
+    //             ]);
+    //         }
+    //     });
+    // }
 
     public function produk(): BelongsTo
     {

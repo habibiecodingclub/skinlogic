@@ -21,26 +21,25 @@ class Pesanan extends Model
 
     public function produk(): BelongsToMany
     {
-        return $this->belongsToMany(Produk::class, 'pesanan_produk');
+        return $this->belongsToMany(Produk::class, 'pesanan_produk')->withPivot('qty', 'harga', 'created_at')->withTimestamps();
     }
 
+    // Pastikan nama relasi ini sesuai dengan yang dipanggil
     public function detailProduk(): HasMany
     {
-        return $this->hasMany(PesananProduk::class);
+        return $this->hasMany(PesananProduk::class, 'pesanan_id');
     }
 
-    // Tambahkan relasi untuk perawatan
+    public function detailPerawatan(): HasMany
+    {
+        return $this->hasMany(PesananPerawatan::class, 'pesanan_id');
+    }
+
     public function perawatans(): BelongsToMany
     {
         return $this->belongsToMany(Perawatan::class, 'pesanan_perawatan');
     }
 
-    public function detailPerawatan(): HasMany
-    {
-        return $this->hasMany(PesananPerawatan::class);
-    }
-
-    // Method untuk total harga
     public function getTotalHargaAttribute()
     {
         $totalProduk = $this->detailProduk->sum(function($item) {

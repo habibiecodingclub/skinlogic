@@ -21,7 +21,7 @@ class PerawatanPolicy
      */
     public function view(User $user, Perawatan $perawatan): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PerawatanPolicy
      */
     public function update(User $user, Perawatan $perawatan): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -45,7 +45,7 @@ class PerawatanPolicy
      */
     public function delete(User $user, Perawatan $perawatan): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -53,7 +53,7 @@ class PerawatanPolicy
      */
     public function restore(User $user, Perawatan $perawatan): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 
     /**
@@ -61,6 +61,6 @@ class PerawatanPolicy
      */
     public function forceDelete(User $user, Perawatan $perawatan): bool
     {
-        return false;
+        return $user->hasAnyRole(['admin', 'manajer']);
     }
 }

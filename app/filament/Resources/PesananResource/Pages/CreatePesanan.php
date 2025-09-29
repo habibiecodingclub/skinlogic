@@ -3,101 +3,126 @@
 namespace App\Filament\Resources\PesananResource\Pages;
 
 use App\Filament\Resources\PesananResource;
+use App\Models\Pesanan;
+use App\Models\Produk;
+use App\Models\PesananProduk;
+use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CreatePesanan extends CreateRecord
 {
     protected static string $resource = PesananResource::class;
 
-    protected function handleRecordCreation(array $data): Model
+    protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // Buat pesanan terlebih dahulu
-        $pesanan = static::getModel()::create($data);
+        Log::info("=== BEFORE CREATE PESANAN ===");
+        Log::info("Status: " . ($data['status'] ?? 'null'));
+        Log::info("Jumlah produk: " . (isset($data['detailProduk']) ? count($data['detailProduk']) : 0));
 
-        // Handle produk manually
-        if (isset($data['detailProduk'])) {
-            foreach ($data['detailProduk'] as $produkData) {
-                if (!empty($produkData['produk_id']) && !empty($produkData['qty'])) {
-
-                    $produk = \App\Models\Produk::find($produkData['produk_id']);
-
-                    if (!$produk) {
-                        throw new \Exception("Produk tidak ditemukan");
-                    }
-
-                    // Validasi stok
-                    if ($produk->Stok < $produkData['qty']) {
-                        throw new \Exception("Stok {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}");
-                    }
-
-                    // Buat pesanan produk
-                    $pesananProduk = $pesanan->detailProduk()->create([
-                        'produk_id' => $produkData['produk_id'],
-                        'qty' => $produkData['qty'],
-                        'harga' => $produkData['harga'] ?? $produk->Harga,
-                    ]);
-
-                    // Kurangi stok secara manual
-                    $produk->decrement('Stok', $produkData['qty']);
-
-                    // Catat di stok movement
-                    $produk->kurangiStok(
-                        $produkData['qty'],
-                        "Penjualan pesanan #{$pesanan->id}",
-                        now()
-                    );
-                }
-            }
-        }
-
-        // Handle perawatan
-        if (isset($data['detailPerawatan'])) {
-            foreach ($data['detailPerawatan'] as $perawatanData) {
-                if (!empty($perawatanData['perawatan_id']) && !empty($perawatanData['qty'])) {
-                    $pesanan->detailPerawatan()->create([
-                        'perawatan_id' => $perawatanData['perawatan_id'],
-                        'qty' => $perawatanData['qty'],
-                        'harga' => $perawatanData['harga'] ?? \App\Models\Perawatan::find($perawatanData['perawatan_id'])->Harga,
-                    ]);
-                }
-            }
-        }
-
-        return $pesanan;
+        return $data;
     }
 
-    protected function afterCreate(): void
-{
-    $pesanan = $this->record;
+    protected function handleRecordCreation(array $data): Pesanan
+    {
+        Log::info("=== START HANDLE RECORD CREATION ===");
 
-    // ... kode untuk produk ...
+        return DB::transaction(function () use ($data) {
+            try {
+                // 1. Validasi stok sebelum membuat pesanan
+                if ($data['status'] === 'Berhasil') {
+                    foreach ($data['detailProduk'] ?? [] as $index => $item) {
+                        $produk = Produk::find($item['produk_id']);
+                        if (!$produk) {
+                            throw new \Exception("Produk tidak ditemukan");
+                        }
 
-    // Handle pengurangan stok untuk perawatan
-    foreach ($pesanan->detailPerawatan as $detailPerawatan) {
-        $perawatan = $detailPerawatan->perawatan;
+                        if ($produk->Stok < (int)$item['qty']) {
+                            throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$item['qty']}");
+                        }
 
-        // Kurangi stok produk yang digunakan dalam perawatan
-        // Multiply dengan quantity pesanan
-        foreach ($perawatan->produk as $produk) {
-            $totalQtyDigunakan = $produk->pivot->qty_digunakan * $detailPerawatan->qty;
+                        Log::info("Validasi produk {$index}: {$produk->Nama}, Stok: {$produk->Stok}, Qty: {$item['qty']} - OK");
+                    }
+                }
 
-            if ($produk->Stok < $totalQtyDigunakan) {
-                throw new \Exception("Stok {$produk->Nama} tidak mencukupi untuk perawatan {$perawatan->Nama_Perawatan}");
+                // 2. Buat pesanan
+                $pesanan = Pesanan::create([
+                    'pelanggan_id' => $data['pelanggan_id'],
+                    'Metode_Pembayaran' => $data['Metode_Pembayaran'],
+                    'status' => $data['status'],
+                    'created_at' => now(),
+                ]);
+
+                Log::info("Pesanan created: #{$pesanan->id}");
+
+                // 3. Process produk - MANUAL CREATION tanpa relationship
+                if (isset($data['detailProduk'])) {
+                    foreach ($data['detailProduk'] as $index => $item) {
+                        $produk = Produk::find($item['produk_id']);
+
+                        if (!$produk) {
+                            throw new \Exception("Produk tidak ditemukan");
+                        }
+
+                        Log::info("Processing product {$index}: {$produk->Nama} (ID: {$produk->id})");
+                        Log::info("Stok sebelum: {$produk->Stok}, Qty: {$item['qty']}");
+
+                        if ($data['status'] === 'Berhasil') {
+                            // **PANGGIL METHOD KURANGI STOK DI SINI**
+                            Log::info("Calling kurangiStok for product {$produk->Nama}");
+
+                            $produk->kurangiStok(
+                                (int)$item['qty'],
+                                "Penjualan pesanan #{$pesanan->id}"
+                            );
+
+                            Log::info("Stok movement created for product {$produk->Nama}");
+                        } else {
+                            Log::info("Skipping stock reduction - status: {$data['status']}");
+                        }
+
+                        // 4. Create pesanan_produk record MANUALLY
+                        PesananProduk::create([
+                            'pesanan_id' => $pesanan->id,
+                            'produk_id' => $item['produk_id'],
+                            'qty' => $item['qty'],
+                            'harga' => $item['harga'],
+                        ]);
+
+                        Log::info("PesananProduk created for product {$produk->Nama}");
+                    }
+                }
+
+                // 5. Process perawatan (tetap menggunakan relationship)
+                if (isset($data['detailPerawatan'])) {
+                    foreach ($data['detailPerawatan'] as $item) {
+                        $pesanan->detailPerawatan()->create([
+                            'perawatan_id' => $item['perawatan_id'],
+                            'qty' => $item['qty'],
+                            'harga' => $item['harga'],
+                        ]);
+                    }
+                }
+
+                Log::info("=== PESANAN CREATION COMPLETED SUCCESSFULLY ===");
+                return $pesanan;
+
+            } catch (\Exception $e) {
+                Log::error("Error creating pesanan: " . $e->getMessage());
+                Log::error("Stack trace: " . $e->getTraceAsString());
+                throw $e;
             }
-
-            // Kurangi stok produk
-            $produk->decrement('Stok', $totalQtyDigunakan);
-
-            // Catat di stok movement
-            \App\Models\StokMovement::create([
-                'produk_id' => $produk->id,
-                'tipe' => 'keluar',
-                'jumlah' => $totalQtyDigunakan,
-                'keterangan' => "Penggunaan untuk perawatan: {$perawatan->Nama_Perawatan} (Pesanan #{$pesanan->id})",
-                'tanggal' => now(),
-            ]);
-        }
+        });
     }
-}
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Pesanan berhasil dibuat';
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

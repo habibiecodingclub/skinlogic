@@ -63,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 PelangganStats::class,
                 PelangganLoyalTable::class,
                 ProdukTerlarisTable::class,
-                StokOverview::class
+                // StokOverview::class
 
                 // PemasukanStats::class,
                 // StatsOverview::class,

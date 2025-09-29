@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
+use Illuminate\Validation\Rule;
 
 class PerawatanResource extends Resource
 {
@@ -37,10 +38,36 @@ class PerawatanResource extends Resource
                             ->columnSpan(2),
 
                         TextInput::make("Harga")
-                            ->numeric()
+                            ->label('Harga')
                             ->required()
                             ->prefix('Rp')
-                            ->minValue(0)
+                            ->maxLength(20)
+                            ->formatStateUsing(fn ($state) => $state !== null ? number_format((int) $state, 0, ',', '.') : '')
+                            ->dehydrateStateUsing(fn ($state) => (int) preg_replace('/[^\d]/', '', $state))
+                            ->rule(function () {
+                                return function ($attribute, $value, $fail) {
+                                    // Custom validation untuk menerima format dengan titik
+                                    $numericValue = preg_replace('/[^\d]/', '', $value);
+                                    if (!is_numeric($numericValue) || $numericValue < 0) {
+                                        $fail('Harga harus berupa angka yang valid.');
+                                    }
+                                    if ($numericValue > 999999999999) {
+                                        $fail('Harga terlalu besar.');
+                                    }
+                                };
+                            })
+                            ->validationMessages([
+                                'required' => 'Harga harus diisi',
+                            ])
+                            ->helperText('Masukkan harga (contoh: 1000000 atau 1.000.000)')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                if (!empty($state)) {
+                                    $numericValue = (int) preg_replace('/[^\d]/', '', $state);
+                                    $set('Harga', $numericValue > 0 ? number_format($numericValue, 0, ',', '.') : '');
+                                }
+                            })
+                            ->placeholder('0')
                             ->columnSpan(1),
                     ])
                     ->columns(3),
@@ -96,6 +123,7 @@ class PerawatanResource extends Resource
                                     ->prefix('Rp')
                                     ->readOnly()
                                     ->dehydrated(false)
+                                    ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : $state)
                                     ->columnSpan(1),
 
                                 TextInput::make('qty_digunakan')
@@ -117,6 +145,7 @@ class PerawatanResource extends Resource
                                     ->prefix('Rp')
                                     ->readOnly()
                                     ->dehydrated(false)
+                                    ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : $state)
                                     ->columnSpan(1),
 
                                 TextInput::make('keterangan')
@@ -128,7 +157,6 @@ class PerawatanResource extends Resource
                             ->columns(3)
                             ->addActionLabel('Tambah Produk')
                             ->defaultItems(0)
-                            // Hapus dehydrated(false) agar data repeater dapat diakses dan disimpan melalui handling custom
                             ->afterStateHydrated(function (Repeater $component, $context, $livewire) {
                                 if ($context === 'edit') {
                                     $record = $livewire->getRecord();
@@ -148,80 +176,6 @@ class PerawatanResource extends Resource
                                     }
                                 }
                             }),
-
-                        // Summary
-                        Forms\Components\Placeholder::make('total_summary')
-                            ->label('Ringkasan Biaya')
-                            ->content(function (Forms\Get $get) {
-                                $produkData = $get('produk_digunakan') ?? [];
-
-                                // Validasi harga perawatan
-                                $hargaPerawatan = 0;
-                                $hargaInput = $get('Harga');
-                                if (is_numeric($hargaInput)) {
-                                    $hargaPerawatan = floatval($hargaInput);
-                                } elseif (is_string($hargaInput)) {
-                                    $cleaned = preg_replace('/[^0-9]/', '', $hargaInput);
-                                    if (is_numeric($cleaned)) {
-                                        $hargaPerawatan = floatval($cleaned);
-                                    }
-                                }
-
-                                $totalProduk = 0;
-                                $items = [];
-
-                                foreach ($produkData as $index => $item) {
-                                    // Validasi bahwa item adalah array
-                                    if (!is_array($item)) {
-                                        continue;
-                                    }
-
-                                    // Validasi dan konversi nilai
-                                    $namaProduk = $item['nama_produk'] ?? 'Produk Tidak Diketahui';
-
-                                    // Validasi harga_satuan
-                                    $harga = 0;
-                                    if (isset($item['harga_satuan']) && is_numeric($item['harga_satuan'])) {
-                                        $harga = floatval($item['harga_satuan']);
-                                    }
-
-                                    // Validasi qty_digunakan
-                                    $qty = 1;
-                                    if (isset($item['qty_digunakan']) && is_numeric($item['qty_digunakan'])) {
-                                        $qty = floatval($item['qty_digunakan']);
-                                    }
-
-                                    $subtotal = $harga * $qty;
-                                    $totalProduk += $subtotal;
-
-                                    // Pastikan index adalah numerik
-                                    $displayIndex = is_numeric($index) ? ($index + 1) : (count($items) + 1);
-
-                                    $items[] = $displayIndex . '. ' . $namaProduk .
-                                               ' - ' . $qty . ' x Rp ' . number_format($harga, 0, ',', '.') .
-                                               ' = Rp ' . number_format($subtotal, 0, ',', '.');
-                                }
-
-                                $totalAll = $hargaPerawatan + $totalProduk;
-
-                                $html = '<div class="space-y-2">';
-                                $html .= '<div class="font-semibold">Detail Produk:</div>';
-
-                                if (!empty($items)) {
-                                    $html .= '<div class="text-sm">' . implode('<br>', $items) . '</div>';
-                                } else {
-                                    $html .= '<div class="text-sm text-gray-500">Belum ada produk ditambahkan</div>';
-                                }
-
-                                $html .= '<div class="border-t pt-2">';
-                                $html .= '<div>Total Harga Produk: <strong>Rp ' . number_format($totalProduk, 0, ',', '.') . '</strong></div>';
-                                $html .= '<div>Harga Perawatan: <strong>Rp ' . number_format($hargaPerawatan, 0, ',', '.') . '</strong></div>';
-                                $html .= '<div class="font-bold text-lg text-primary-600">Harga Jual Recommended: Rp ' . number_format($totalAll, 0, ',', '.') . '</strong></div>';
-                                $html .= '</div></div>';
-
-                                return new HtmlString($html);
-                            })
-                            ->columnSpanFull(),
                     ]),
             ]);
     }
@@ -237,31 +191,6 @@ class PerawatanResource extends Resource
                 TextColumn::make("Harga")
                     ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
                     ->sortable(),
-
-                TextColumn::make('jumlah_produk')
-                    ->label('Jml Produk')
-                    ->getStateUsing(fn($record) => $record->produk->count())
-                    ->badge(),
-
-                TextColumn::make('total_harga_produk')
-                    ->label('Total Biaya Produk')
-                    ->getStateUsing(function ($record) {
-                        $total = $record->produk->sum(function ($produk) {
-                            return $produk->Harga * $produk->pivot->qty_digunakan;
-                        });
-                        return 'Rp ' . number_format($total, 0, ',', '.');
-                    }),
-
-                TextColumn::make('harga_recommended')
-                    ->label('Harga Recommended')
-                    ->getStateUsing(function ($record) {
-                        $totalProduk = $record->produk->sum(function ($produk) {
-                            return $produk->Harga * $produk->pivot->qty_digunakan;
-                        });
-                        $total = $record->Harga + $totalProduk;
-                        return 'Rp ' . number_format($total, 0, ',', '.');
-                    })
-                    ->color('success'),
             ])
             ->filters([
                 //
@@ -323,8 +252,8 @@ class PerawatanResource extends Resource
         ];
     }
 
-    public static function shouldRegisterNavigation(): bool
-    {
-        return auth()->user()->hasRole('kasir') || auth()->user()->hasAnyRole(['admin', 'manajer']);
-    }
+    // public static function shouldRegisterNavigation(): bool
+    // {
+    //     return auth()->user()->hasRole('kasir') || auth()->user()->hasAnyRole(['admin', 'manajer']);
+    // }
 }

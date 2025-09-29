@@ -7,7 +7,6 @@ use App\Filament\Resources\PelangganResource\RelationManagers;
 use App\Models\Pelanggan;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -17,7 +16,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Laravel\Prompts\Table as PromptsTable;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -33,22 +31,45 @@ class PelangganResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make("Nama")->required()->placeholder("Nama Pelanggan"),
-                TextInput::make("Pekerjaan")->required()->placeholder("Guru"),
+                TextInput::make("Nama")
+                    ->required()
+                    ->placeholder("Nama Pelanggan")
+                    ->regex('/^[a-zA-Z\s]+$/')
+                    ->validationMessages([
+                        'regex' => 'Nama hanya boleh berisi huruf dan spasi.',
+                    ]),
+
+                TextInput::make("Pekerjaan")
+                    ->required()
+                    ->placeholder("Guru")
+                    ->regex('/^[a-zA-Z\s]+$/')
+                    ->validationMessages([
+                        'regex' => 'Pekerjaan hanya boleh berisi huruf dan spasi.',
+                    ]),
+
                 TextInput::make('Nomor_Telepon')
                     ->tel()
-                    ->validationMessages([
-                        "regex" => "Masukkan nomor telepon dengan benar! (cth: 085****)",
-                    ])
                     ->required()
                     ->placeholder("085312984232")
-                    ->telRegex('/^[+]?[0-9]{10,15}$/'),
-                DatePicker::make("Tanggal_Lahir")->required(),
-                TextInput::make("Email")->email()->required()->placeholder("pelanggan@gmail.com"),
-                Select::make("Status")->options([
-                    'Member' => "Member",
-                    'Non Member' => "Non member",
-                ]),
+                    ->telRegex('/^[+]?[0-9]{10,15}$/')
+                    ->validationMessages([
+                        "regex" => "Masukkan nomor telepon dengan benar! (cth: 085****)",
+                    ]),
+
+                DatePicker::make("Tanggal_Lahir")
+                    ->maxDate(now())
+                    ->required(),
+
+                TextInput::make("Email")
+                    ->email()
+                    ->required()
+                    ->placeholder("pelanggan@gmail.com"),
+
+                Select::make("Status")
+                    ->options([
+                        'Member' => "Member",
+                        'Non Member' => "Non Member",
+                    ]),
             ]);
     }
 
@@ -62,20 +83,18 @@ class PelangganResource extends Resource
                 TextColumn::make("Tanggal_Lahir"),
                 TextColumn::make("Email"),
                 TextColumn::make("Status"),
-
-                //
             ])
             ->filters([
                 //
             ])
-->headerActions([
-                ExportAction::make()->exports([
-                    ExcelExport::make()->fromTable()
-                ])->label('download')
+            ->headerActions([
+                // ExportAction::make()->exports([
+                //     ExcelExport::make()->fromTable()
+                // ])->label('Download')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -7,7 +7,8 @@ use App\Models\PesananProduk;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Support\Facades\DB;
+use Filament\Tables\Actions\Action;
+use Illuminate\Contracts\View\View;
 
 class ProdukTerlarisTable extends BaseWidget
 {
@@ -20,15 +21,21 @@ class ProdukTerlarisTable extends BaseWidget
         return $table
             ->query(
                 Produk::query()
+                    ->whereHas('pesanan')
                     ->select('produks.*')
                     ->addSelect([
                         'total_terjual' => PesananProduk::query()
-                            ->selectRaw('COALESCE(SUM(qty), 0)')
-                            ->whereColumn('pesanan_produk.produk_id', 'produks.id'),
-                        'total_pendapatan' => PesananProduk::query()
-                            ->selectRaw('COALESCE(SUM(qty * harga), 0)')
+                            ->selectRaw('COALESCE(SUM(pesanan_produk.qty), 0)')
+                            ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
                             ->whereColumn('pesanan_produk.produk_id', 'produks.id')
+                            ->where('pesanans.status', 'Berhasil'),
+                        'total_pendapatan' => PesananProduk::query()
+                            ->selectRaw('COALESCE(SUM(pesanan_produk.qty * pesanan_produk.harga), 0)')
+                            ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+                            ->whereColumn('pesanan_produk.produk_id', 'produks.id')
+                            ->where('pesanans.status', 'Berhasil')
                     ])
+                    ->havingRaw('total_terjual > 0')
                     ->orderByDesc('total_terjual')
             )
             ->columns([
@@ -65,10 +72,20 @@ class ProdukTerlarisTable extends BaseWidget
                     ->alignRight(),
             ])
             ->actions([
-                Tables\Actions\Action::make('view')
-                    ->url(fn (Produk $record): string => route('filament.admin.resources.produks.edit', $record))
-                    ->icon('heroicon-o-eye'),
+                Action::make('view')
+                    ->label('Lihat Histori')
+                    ->icon('heroicon-o-eye')
+                    ->modalHeading(fn (Produk $record) => "Histori Penjualan - {$record->Nama}")
+                    ->modalContent(fn (Produk $record): View => view(
+                        'filament.widgets.produk-histori',
+                        ['produk' => $record]
+                    ))
+                    ->modalCancelActionLabel('Tutup')
+                    ->modalSubmitAction(false)
+                    ->modalWidth('7xl'),
             ])
+            ->emptyStateHeading("Belum ada produk yang terjual")
+            ->emptyStateIcon('heroicon-o-shopping-bag')
             ->paginated([10, 25, 50, 100]);
     }
 }

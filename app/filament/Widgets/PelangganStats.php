@@ -2,7 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Pesanan;
 use App\Models\PesananProduk;
+use App\Models\PesananPerawatan;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
@@ -20,26 +22,52 @@ class PelangganStats extends BaseWidget
         return [
             $this->getDailyIncomeStat(),
             $this->getTotalIncomeStat(),
+            $this->getIncomeBreakdownStat(),
         ];
     }
 
     protected function getDailyIncomeStat(): Stat
     {
-        $data = PesananProduk::query()
-            ->selectRaw('SUM(qty * harga) as total')
-            ->whereDate('created_at', today())
+        // Income dari produk hari ini
+        $produkToday = PesananProduk::query()
+            ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->whereDate('pesanan_produk.created_at', today())
+            ->selectRaw('SUM(pesanan_produk.qty * pesanan_produk.harga) as total')
             ->first();
 
-        $yesterday = PesananProduk::query()
-            ->selectRaw('SUM(qty * harga) as total')
-            ->whereDate('created_at', today()->subDay())
+        // Income dari treatment hari ini
+        $treatmentToday = PesananPerawatan::query()
+            ->join('pesanans', 'pesanan_perawatan.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->whereDate('pesanan_perawatan.created_at', today())
+            ->selectRaw('SUM(pesanan_perawatan.qty * pesanan_perawatan.harga) as total')
             ->first();
 
-        $growth = $yesterday->total > 0
-            ? round((($data->total - $yesterday->total) / $yesterday->total) * 100, 2)
-            : 0;
+        $totalToday = ($produkToday->total ?? 0) + ($treatmentToday->total ?? 0);
 
-        return Stat::make('Today Income', 'IDR ' . number_format($data->total ?? 0, 0, ',', '.'))
+        // Income kemarin untuk growth calculation
+        $produkYesterday = PesananProduk::query()
+            ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->whereDate('pesanan_produk.created_at', today()->subDay())
+            ->selectRaw('SUM(pesanan_produk.qty * pesanan_produk.harga) as total')
+            ->first();
+
+        $treatmentYesterday = PesananPerawatan::query()
+            ->join('pesanans', 'pesanan_perawatan.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->whereDate('pesanan_perawatan.created_at', today()->subDay())
+            ->selectRaw('SUM(pesanan_perawatan.qty * pesanan_perawatan.harga) as total')
+            ->first();
+
+        $totalYesterday = ($produkYesterday->total ?? 0) + ($treatmentYesterday->total ?? 0);
+
+        $growth = $totalYesterday > 0
+            ? round((($totalToday - $totalYesterday) / $totalYesterday) * 100, 2)
+            : ($totalToday > 0 ? 100 : 0);
+
+        return Stat::make('Today Income', 'IDR ' . number_format($totalToday, 0, ',', '.'))
             ->description($growth >= 0 ? "↑ {$growth}% vs yesterday" : "↓ {$growth}% vs yesterday")
             ->icon('heroicon-o-arrow-trending-up')
             ->color($growth >= 0 ? 'success' : 'danger')
@@ -59,40 +87,128 @@ class PelangganStats extends BaseWidget
             default => 7,
         };
 
-        $query = PesananProduk::query()
+        // Income dari produk
+        $produkQuery = PesananProduk::query()
+            ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
             ->when($days, function ($q) use ($days) {
-            $q->whereDate('created_at', '>=', now()->subDays($days));
+                $q->whereDate('pesanan_produk.created_at', '>=', now()->subDays($days));
             });
 
-            $total = $query->sum(DB::raw('qty * harga'));
-            $rangeLabel = $days ? "Last {$days} days" : "All time";
+        $produkTotal = $produkQuery->sum(DB::raw('pesanan_produk.qty * pesanan_produk.harga'));
 
-            return Stat::make('Total Income', 'IDR ' . number_format($total ?? 0, 0, ',', '.'))
+        // Income dari treatment
+        $treatmentQuery = PesananPerawatan::query()
+            ->join('pesanans', 'pesanan_perawatan.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->when($days, function ($q) use ($days) {
+                $q->whereDate('pesanan_perawatan.created_at', '>=', now()->subDays($days));
+            });
+
+        $treatmentTotal = $treatmentQuery->sum(DB::raw('pesanan_perawatan.qty * pesanan_perawatan.harga'));
+
+        $totalIncome = $produkTotal + $treatmentTotal;
+        $rangeLabel = $days ? "Last {$days} days" : "All time";
+
+        return Stat::make('Total Income', 'IDR ' . number_format($totalIncome, 0, ',', '.'))
             ->description($rangeLabel)
             ->icon('heroicon-o-chart-pie')
             ->color('primary')
             ->chart($this->getTotalIncomeChart($days))
-->extraAttributes([
-'class' => 'bg-gradient-to-br from-purple-50/50 to-purple-100/50 p-4 rounded-lg',
-]);
-}
+            ->extraAttributes([
+                'class' => 'bg-gradient-to-br from-purple-50/50 to-purple-100/50 p-4 rounded-lg',
+            ]);
+    }
+
+    protected function getIncomeBreakdownStat(): Stat
+    {
+        $days = match ($this->timeRange) {
+            '7' => 7,
+            '30' => 30,
+            '90' => 90,
+            'all' => null,
+            default => 7,
+        };
+
+        // Income breakdown
+        $produkQuery = PesananProduk::query()
+            ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->when($days, function ($q) use ($days) {
+                $q->whereDate('pesanan_produk.created_at', '>=', now()->subDays($days));
+            });
+
+        $produkTotal = $produkQuery->sum(DB::raw('pesanan_produk.qty * pesanan_produk.harga'));
+
+        $treatmentQuery = PesananPerawatan::query()
+            ->join('pesanans', 'pesanan_perawatan.pesanan_id', '=', 'pesanans.id')
+            ->where('pesanans.status', 'Berhasil')
+            ->when($days, function ($q) use ($days) {
+                $q->whereDate('pesanan_perawatan.created_at', '>=', now()->subDays($days));
+            });
+
+        $treatmentTotal = $treatmentQuery->sum(DB::raw('pesanan_perawatan.qty * pesanan_perawatan.harga'));
+
+        $totalIncome = $produkTotal + $treatmentTotal;
+
+        if ($totalIncome > 0) {
+            $produkPercentage = round(($produkTotal / $totalIncome) * 100, 1);
+            $treatmentPercentage = round(($treatmentTotal / $totalIncome) * 100, 1);
+            $description = "Products: {$produkPercentage}% • Treatments: {$treatmentPercentage}%";
+        } else {
+            $description = "No income data";
+        }
+
+        return Stat::make('Income Breakdown', 'IDR ' . number_format($totalIncome, 0, ',', '.'))
+            ->description($description)
+            ->icon('heroicon-o-puzzle-piece')
+            ->color('info')
+            ->extraAttributes([
+                'class' => 'bg-gradient-to-br from-blue-50/50 to-blue-100/50 p-4 rounded-lg',
+            ]);
+    }
 
     protected function getDailyChart(): array
     {
         return collect(range(6, 0))->map(function ($i) {
-            return PesananProduk::whereDate('created_at', today()->subDays($i))
-                ->sum(DB::raw('qty * harga'));
+            $date = today()->subDays($i);
+
+            $produkIncome = PesananProduk::query()
+                ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+                ->where('pesanans.status', 'Berhasil')
+                ->whereDate('pesanan_produk.created_at', $date)
+                ->sum(DB::raw('pesanan_produk.qty * pesanan_produk.harga'));
+
+            $treatmentIncome = PesananPerawatan::query()
+                ->join('pesanans', 'pesanan_perawatan.pesanan_id', '=', 'pesanans.id')
+                ->where('pesanans.status', 'Berhasil')
+                ->whereDate('pesanan_perawatan.created_at', $date)
+                ->sum(DB::raw('pesanan_perawatan.qty * pesanan_perawatan.harga'));
+
+            return $produkIncome + $treatmentIncome;
         })->toArray();
     }
 
     protected function getTotalIncomeChart(?int $days = null): array
     {
         $days = $days ?? 30;
-        // $days = min($days, 30);
 
         return collect(range($days - 1, 0))->map(function ($i) {
-            return PesananProduk::whereDate('created_at', today()->subDays($i))
-                ->sum(DB::raw('qty * harga'));
+            $date = today()->subDays($i);
+
+            $produkIncome = PesananProduk::query()
+                ->join('pesanans', 'pesanan_produk.pesanan_id', '=', 'pesanans.id')
+                ->where('pesanans.status', 'Berhasil')
+                ->whereDate('pesanan_produk.created_at', $date)
+                ->sum(DB::raw('pesanan_produk.qty * pesanan_produk.harga'));
+
+            $treatmentIncome = PesananPerawatan::query()
+                ->join('pesanans', 'pesanan_perawatan.pesanan_id', '=', 'pesanans.id')
+                ->where('pesanans.status', 'Berhasil')
+                ->whereDate('pesanan_perawatan.created_at', $date)
+                ->sum(DB::raw('pesanan_perawatan.qty * pesanan_perawatan.harga'));
+
+            return $produkIncome + $treatmentIncome;
         })->toArray();
     }
 

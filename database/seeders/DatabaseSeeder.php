@@ -45,9 +45,9 @@ class DatabaseSeeder extends Seeder
         $kasir->assignRole($kasirRole);
 
         // Data dummy lain
-        Pelanggan::factory()->count(10)->create();
-        Produk::factory()->count(10)->create();
-        Perawatan::factory()->count(5)->create();
-        Pesanan::factory()->count(30)->create();
+        // Pelanggan::factory()->count(10)->create();
+        // Produk::factory()->count(10)->create();
+        // Perawatan::factory()->count(5)->create();
+        // Pesanan::factory()->count(30)->create();
     }
 }
