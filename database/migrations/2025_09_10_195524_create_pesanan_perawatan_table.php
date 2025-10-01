@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('pesanan_id')->constrained()->cascadeOnDelete();
             $table->foreignId('perawatan_id')->constrained()->cascadeOnDelete();
             $table->integer('qty')->default(1);
-            $table->decimal('harga');
+            $table->decimal('harga', 15,0);
             $table->timestamps();
         });
     }

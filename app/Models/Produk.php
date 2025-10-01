@@ -16,100 +16,263 @@ class Produk extends Model
 
     protected $guarded = [];
 
-    // **TAMBAHKAN METHOD INI**
-    // Di Model Produk, tambahkan logging di method tambahStok()
-  // Di Model Produk, tambahkan logging
-public function tambahStok($jumlah, $keterangan = null, $tanggal = null)
+      protected $casts = [
+        'is_bundling' => 'boolean',
+    ];
+
+    /**
+ * Attribute untuk menghitung stok tersedia bundling
+ * Stok bundling = stok terkecil dari komponen
+ */
+public function getStokTersediaAttribute()
 {
-    log::info("=== TAMBAH STOK DIPANGGIL ===");
-    Log::info("Produk: {$this->Nama} (ID: {$this->id})");
-    Log::info("Stok sebelum: {$this->Stok}");
-    Log::info("Jumlah tambah: {$jumlah}");
-    Log::info("Keterangan: {$keterangan}");
+    if (!$this->is_bundling) {
+        return $this->Stok;
+    }
 
-    // Update stok
-    $stokSebelum = $this->Stok;
-    $this->increment('Stok', $jumlah);
+    if ($this->produkBundlingItems->count() === 0) {
+        return 0;
+    }
 
-    Log::info("Stok sesudah: {$this->Stok}");
-    Log::info("Perhitungan: {$stokSebelum} + {$jumlah} = {$this->Stok}");
+    $stokTersedia = null;
 
-    // Buat stok movement
-    $movement = \App\Models\StokMovement::create([
-        'produk_id' => $this->id,
-        'tipe' => 'masuk',
-        'jumlah' => $jumlah,
-        'keterangan' => $keterangan ?? 'Penambahan stok manual',
-        'tanggal' => $tanggal ?? now(),
-    ]);
+    foreach ($this->produkBundlingItems as $item) {
+        $stokKomponen = $item->produk->Stok;
+        $maxBundling = floor($stokKomponen / $item->qty);
 
-    Log::info("Movement created: {$movement->id}");
-    Log::info("=== END ===");
+        if ($stokTersedia === null || $maxBundling < $stokTersedia) {
+            $stokTersedia = $maxBundling;
+        }
+    }
 
-    return $movement;
+    return $stokTersedia ?? 0;
+}
+
+
+
+     protected static function boot()
+    {
+        parent::boot();
+
+        // Prevent manual stock updates
+        static::updating(function ($produk) {
+            $originalStok = $produk->getOriginal('Stok');
+            $newStok = $produk->Stok;
+
+            if ($originalStok != $newStok) {
+                Log::warning("⚠️ Percobaan update stok manual untuk produk: {$produk->Nama} (ID: {$produk->id})");
+                Log::warning("⚠️ Stok asli: {$originalStok}, Stok baru: {$newStok}");
+
+                // Kembalikan ke nilai semula
+                $produk->Stok = $originalStok;
+            }
+        });
+    }
+
+     // Produk yang merupakan bundling (parent)
+    public function produkBundlingItems(): HasMany
+    {
+        return $this->hasMany(ProdukBundlingItem::class, 'produk_bundling_id');
+    }
+
+    // Produk yang termasuk dalam bundling lain (child)
+    public function includedInBundlings(): HasMany
+    {
+        return $this->hasMany(ProdukBundlingItem::class, 'produk_id');
+    }
+
+    // **METHOD UNTUK BUNDLING**
+
+    /**
+     * Cek apakah produk adalah bundling
+     */
+    public function getIsBundlingAttribute($value)
+    {
+        return (bool) $value;
+    }
+
+    /**
+     * Get harga yang akan digunakan (harga bundling atau harga normal)
+     */
+    public function getHargaJualAttribute()
+{
+    return $this->is_bundling ? $this->harga_bundling : $this->Harga;
 }
 
     /**
-     * Method untuk mengurangi stok
+     * Get total harga komponen bundling
      */
-    // public function kurangiStok($jumlah, $keterangan = null, $tanggal = null)
-    // {
-    //     // Update stok
-    //     $this->decrement('Stok', $jumlah);
-
-    //     // Buat stok movement
-    //     $movement = \App\Models\StokMovement::create([
-    //         'produk_id' => $this->id,
-    //         'tipe' => 'keluar',
-    //         'jumlah' => $jumlah,
-    //         'keterangan' => $keterangan ?? 'Pengurangan stok manual',
-    //         'tanggal' => $tanggal ?? now(),
-    //     ]);
-
-    //     return $movement;
-    // }
-// DI MODEL Produk - PERBAIKI dengan transaction & locking
-// DI MODEL Produk - PASTIKAN METHOD INI ADA DAN BERFUNGSI
-public function kurangiStok($jumlah, $keterangan = null, $tanggal = null)
-{
-    return \Illuminate\Support\Facades\DB::transaction(function () use ($jumlah, $keterangan, $tanggal) {
-        // Lock row untuk prevent race condition
-        $produk = self::lockForUpdate()->find($this->id);
-
-        Log::info("=== KURANGI STOK DIPANGGIL ===");
-        Log::info("Produk: {$produk->Nama} (ID: {$produk->id})");
-        Log::info("Stok sebelum: {$produk->Stok}");
-        Log::info("Jumlah kurangi: {$jumlah}");
-        Log::info("Keterangan: {$keterangan}");
-
-        // Validasi stok cukup
-        if ($produk->Stok < $jumlah) {
-            throw new \Exception("Stok {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$jumlah}");
+    public function getTotalHargaKomponenAttribute()
+    {
+        if (!$this->is_bundling) {
+            return $this->Harga;
         }
 
-        // Update stok
-        $stokSebelum = $produk->Stok;
-        $produk->decrement('Stok', $jumlah);
-        $produk->refresh();
+        return $this->produkBundlingItems->sum(function ($item) {
+            return $item->harga_satuan * $item->qty;
+        });
+    }
 
-        Log::info("Stok sesudah: {$produk->Stok}");
-        Log::info("Perhitungan: {$stokSebelum} - {$jumlah} = {$produk->Stok}");
+    /**
+     * Get selisih harga bundling vs komponen
+     */
+    public function getSelisihHargaAttribute()
+    {
+        if (!$this->is_bundling) {
+            return 0;
+        }
+
+        return $this->harga_bundling - $this->total_harga_komponen;
+    }
+
+    /**
+     * Method untuk mengurangi stok bundling
+     */
+    public function kurangiStokBundling($quantity, $keterangan = null, $tanggal = null)
+    {
+        Log::info("🎁 === KURANGI STOK BUNDLING ===");
+        Log::info("🎁 Bundling: {$this->Nama} (ID: {$this->id})");
+        Log::info("🎁 Quantity: {$quantity}");
+
+        if (!$this->is_bundling) {
+            throw new \Exception("Produk {$this->Nama} bukan produk bundling");
+        }
+
+        return DB::transaction(function () use ($quantity, $keterangan, $tanggal) {
+            // Kurangi stok untuk setiap produk dalam bundling
+            foreach ($this->produkBundlingItems as $item) {
+                $produk = $item->produk;
+                $totalQtyDigunakan = $item->qty * $quantity;
+
+                Log::info("🎁 Kurangi stok produk: {$produk->Nama}");
+                Log::info("🎁   - Qty per bundling: {$item->qty}");
+                Log::info("🎁   - Total qty digunakan: {$totalQtyDigunakan}");
+
+                $produk->kurangiStok(
+                    $totalQtyDigunakan,
+                    "Penggunaan untuk bundling: {$this->Nama}" . ($keterangan ? " ({$keterangan})" : ""),
+                    $tanggal ?? now()
+                );
+            }
+
+            Log::info("🎁✅ Berhasil mengurangi stok semua produk dalam bundling");
+        });
+    }
+
+    /**
+     * Method untuk mengembalikan stok bundling
+     */
+    public function kembalikanStokBundling($quantity, $keterangan = null, $tanggal = null)
+    {
+        Log::info("🔄🎁 === KEMBALIKAN STOK BUNDLING ===");
+        Log::info("🔄🎁 Bundling: {$this->Nama} (ID: {$this->id})");
+        Log::info("🔄🎁 Quantity: {$quantity}");
+
+        if (!$this->is_bundling) {
+            throw new \Exception("Produk {$this->Nama} bukan produk bundling");
+        }
+
+        return DB::transaction(function () use ($quantity, $keterangan, $tanggal) {
+            // Kembalikan stok untuk setiap produk dalam bundling
+            foreach ($this->produkBundlingItems as $item) {
+                $produk = $item->produk;
+                $totalQtyDikembalikan = $item->qty * $quantity;
+
+                Log::info("🔄🎁 Kembalikan stok produk: {$produk->Nama}");
+                Log::info("🔄🎁   - Qty per bundling: {$item->qty}");
+                Log::info("🔄🎁   - Total qty dikembalikan: {$totalQtyDikembalikan}");
+
+                $produk->tambahStok(
+                    $totalQtyDikembalikan,
+                    "Pengembalian dari bundling: {$this->Nama}" . ($keterangan ? " ({$keterangan})" : ""),
+                    $tanggal ?? now()
+                );
+            }
+
+            Log::info("🔄🎁✅ Berhasil mengembalikan stok semua produk dalam bundling");
+        });
+    }
+
+    // **TAMBAHKAN METHOD INI**
+    // Di Model Produk, tambahkan logging di method tambahStok()
+  // Di Model Produk, tambahkan logging
+ public function kurangiStok($jumlah, $keterangan = null, $tanggal = null)
+    {
+        Log::info("🔻 === PRODUK::KURANGI_STOK DIPANGGIL ===");
+        Log::info("🔻 Produk: {$this->Nama} (ID: {$this->id})");
+        Log::info("🔻 Jumlah: {$jumlah}");
+        Log::info("🔻 Keterangan: {$keterangan}");
+
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($jumlah, $keterangan, $tanggal) {
+            // Lock row untuk prevent race condition
+            $produk = self::lockForUpdate()->find($this->id);
+
+            Log::info("🔻 Stok sebelum: {$produk->Stok}");
+
+            // Validasi stok cukup
+            if ($produk->Stok < $jumlah) {
+                $errorMsg = "Stok {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$jumlah}";
+                Log::error("🔻 {$errorMsg}");
+                throw new \Exception($errorMsg);
+            }
+
+            // Update stok
+            $stokSebelum = $produk->Stok;
+            $produk->decrement('Stok', $jumlah);
+            $produk->refresh();
+
+            Log::info("🔻 Stok sesudah: {$produk->Stok}");
+            Log::info("🔻 Perhitungan: {$stokSebelum} - {$jumlah} = {$produk->Stok}");
+
+            // Buat stok movement
+            $movement = \App\Models\StokMovement::create([
+                'produk_id' => $produk->id,
+                'tipe' => 'keluar',
+                'jumlah' => $jumlah,
+                'keterangan' => $keterangan ?? 'Pengurangan stok manual',
+                'tanggal' => $tanggal ?? now(),
+            ]);
+
+            Log::info("🔻 Movement created: {$movement->id}");
+            Log::info("🔻 === END PRODUK::KURANGI_STOK ===");
+
+            return $movement;
+        });
+    }
+
+    /**
+     * Method untuk menambah stok - VERSI DEBUG
+     */
+    public function tambahStok($jumlah, $keterangan = null, $tanggal = null)
+    {
+        Log::info("🔺 === PRODUK::TAMBAH_STOK DIPANGGIL ===");
+        Log::info("🔺 Produk: {$this->Nama} (ID: {$this->id})");
+        Log::info("🔺 Jumlah: {$jumlah}");
+        Log::info("🔺 Keterangan: {$keterangan}");
+
+        // Update stok
+        $stokSebelum = $this->Stok;
+        $this->increment('Stok', $jumlah);
+        $this->refresh();
+
+        Log::info("🔺 Stok sebelum: {$stokSebelum}");
+        Log::info("🔺 Stok sesudah: {$this->Stok}");
+        Log::info("🔺 Perhitungan: {$stokSebelum} + {$jumlah} = {$this->Stok}");
 
         // Buat stok movement
         $movement = \App\Models\StokMovement::create([
-            'produk_id' => $produk->id,
-            'tipe' => 'keluar',
+            'produk_id' => $this->id,
+            'tipe' => 'masuk',
             'jumlah' => $jumlah,
-            'keterangan' => $keterangan ?? 'Pengurangan stok manual',
+            'keterangan' => $keterangan ?? 'Penambahan stok manual',
             'tanggal' => $tanggal ?? now(),
         ]);
 
-        Log::info("Movement created: {$movement->id}");
-        Log::info("=== END KURANGI STOK ===");
+        Log::info("🔺 Movement created: {$movement->id}");
+        Log::info("🔺 === END PRODUK::TAMBAH_STOK ===");
 
         return $movement;
-    });
-}
+    }
 
     public function updateStokWithMovement($jumlah, $tipe, $keterangan, $tanggal = null)
     {

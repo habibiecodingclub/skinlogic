@@ -49,7 +49,19 @@ class ProdukTerlarisTable extends BaseWidget
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('Harga')
+                Tables\Columns\IconColumn::make('is_bundling')
+                    ->label('Bundling')
+                    ->boolean()
+                    ->sortable()
+                    ->alignCenter(),
+
+                // **PERBAIKAN: TAMPILKAN HARGA YANG BENAR BERDASARKAN JENIS PRODUK**
+                Tables\Columns\TextColumn::make('harga_jual')
+                    ->label('Harga Jual')
+                    ->getStateUsing(function (Produk $record) {
+                        // Untuk bundling, gunakan harga_bundling, untuk biasa gunakan Harga
+                        return $record->is_bundling ? $record->harga_bundling : $record->Harga;
+                    })
                     ->money('IDR')
                     ->sortable()
                     ->alignRight(),
@@ -57,7 +69,11 @@ class ProdukTerlarisTable extends BaseWidget
                 Tables\Columns\TextColumn::make('Stok')
                     ->numeric()
                     ->sortable()
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->getStateUsing(function (Produk $record) {
+                        // Untuk bundling, tampilkan "Auto" karena stok dikelola otomatis
+                        return $record->is_bundling ? 'Auto' : $record->Stok;
+                    }),
 
                 Tables\Columns\TextColumn::make('total_terjual')
                     ->label('Terjual')

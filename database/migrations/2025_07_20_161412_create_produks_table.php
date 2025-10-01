@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->uuid("Nomor_SKU")->unique();
             $table->string("Nama");
-            $table->decimal("Harga", 10, 0);
-            $table->integer("Stok");
+            $table->boolean('is_bundling')->default(false);
+            $table->decimal('harga_bundling', 15, 0)->nullable()->comment('Harga khusus untuk bundling');
+            $table->decimal("Harga", 15, 0)->default(0);
+            $table->integer("Stok")->default(0);
             $table->timestamps();
         });
     }
@@ -27,5 +29,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('produks');
+        // Schema::table('produks', function (Blueprint $table) {
+        //     $table->dropColumn(['is_bundling', 'harga_bundling']);
+        // });
     }
 };

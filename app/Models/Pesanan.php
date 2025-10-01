@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pesanan extends Model
@@ -16,40 +15,47 @@ class Pesanan extends Model
 
     public function pelanggan(): BelongsTo
     {
-        return $this->belongsTo(Pelanggan::class);
+        return $this->belongsTo(Pelanggan::class, 'pelanggan_id');
     }
 
-    public function produk(): BelongsToMany
-    {
-        return $this->belongsToMany(Produk::class, 'pesanan_produk')->withPivot('qty', 'harga', 'created_at')->withTimestamps();
-    }
-
-    // Pastikan nama relasi ini sesuai dengan yang dipanggil
+    // **RELASI DETAIL PRODUK - PASTIKAN NAMA TABLE BENAR**
     public function detailProduk(): HasMany
     {
         return $this->hasMany(PesananProduk::class, 'pesanan_id');
     }
 
+    // **RELASI DETAIL PERAWATAN - PASTIKAN NAMA TABLE BENAR**
     public function detailPerawatan(): HasMany
     {
         return $this->hasMany(PesananPerawatan::class, 'pesanan_id');
     }
 
-    public function perawatans(): BelongsToMany
+    // **ATTRIBUTE TOTAL HARGA - PAKAI CARA YANG LEBIH SIMPLE**
+    public function getTotalAttribute()
     {
-        return $this->belongsToMany(Perawatan::class, 'pesanan_perawatan');
+        $total = 0;
+
+        // Hitung total dari produk
+        foreach ($this->detailProduk as $item) {
+            $total += $item->harga * $item->qty;
+        }
+
+        // Hitung total dari perawatan
+        foreach ($this->detailPerawatan as $item) {
+            $total += $item->harga * $item->qty;
+        }
+
+        return $total;
     }
 
+    // **ALIAS UNTUK COMPATIBILITY**
     public function getTotalHargaAttribute()
     {
-        $totalProduk = $this->detailProduk->sum(function($item) {
-            return $item->harga * $item->qty;
-        });
+        return $this->total;
+    }
 
-        $totalPerawatan = $this->detailPerawatan->sum(function($item) {
-            return $item->harga * $item->qty;
-        });
-
-        return $totalProduk + $totalPerawatan;
+    public function getTotalPembayaranAttribute()
+    {
+        return $this->total;
     }
 }
