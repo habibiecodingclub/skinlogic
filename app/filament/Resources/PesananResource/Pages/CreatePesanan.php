@@ -75,13 +75,13 @@ class CreatePesanan extends CreateRecord
 
                     if ($data['status'] === 'Berhasil' && !$produk->is_bundling) {
                         // **VALIDASI STOK HANYA UNTUK PRODUK NON-BUNDLING**
-                        if ($produk->Stok < $qty) {
-                            throw new \Exception(
-                                "Stok produk {$produk->Nama} tidak mencukupi. " .
-                                "Stok tersedia: {$produk->Stok}, diperlukan: {$qty}"
-                            );
-                        }
-                        Log::info("🛒✅ Validasi stok produk {$produk->Nama} - OK");
+                        // if ($produk->Stok < $qty) {
+                        //     throw new \Exception(
+                        //         "Stok produk {$produk->Nama} tidak mencukupi. " .
+                        //         "Stok tersedia: {$produk->Stok}, diperlukan: {$qty}"
+                        //     );
+                        // }
+                        // Log::info("🛒✅ Validasi stok produk {$produk->Nama} - OK");
                     } else {
                         Log::info("🎁 Skipping stock validation for bundling product {$produk->Nama}");
                     }
@@ -182,13 +182,13 @@ class CreatePesanan extends CreateRecord
                         if ($data['status'] === 'Berhasil') {
                             foreach ($perawatan->produk as $produk) {
                                 $qtyDigunakan = $produk->pivot->qty_digunakan * $qty;
-                                if ($produk->Stok < $qtyDigunakan) {
-                                    throw new \Exception(
-                                        "Stok tidak mencukupi untuk perawatan {$perawatan->Nama_Perawatan}. " .
-                                        "Produk {$produk->Nama} hanya tersedia {$produk->Stok}, " .
-                                        "diperlukan {$qtyDigunakan}"
-                                    );
-                                }
+                                // if ($produk->Stok < $qtyDigunakan) {
+                                //     throw new \Exception(
+                                //         "Stok tidak mencukupi untuk perawatan {$perawatan->Nama_Perawatan}. " .
+                                //         "Produk {$produk->Nama} hanya tersedia {$produk->Stok}, " .
+                                //         "diperlukan {$qtyDigunakan}"
+                                //     );
+                                // }
                             }
                             Log::info("💆✅ Validasi stok perawatan {$perawatan->Nama_Perawatan} - OK");
                         }

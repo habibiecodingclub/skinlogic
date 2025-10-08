@@ -82,11 +82,11 @@ class Perawatan extends Model
             Log::info("   - Total Qty Digunakan: {$totalQtyDigunakan}");
 
             // VALIDASI STOK
-            if ($produk->Stok < $totalQtyDigunakan) {
-                $errorMsg = "❌ Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$totalQtyDigunakan}";
-                Log::error($errorMsg);
-                throw new \Exception($errorMsg);
-            }
+            // if ($produk->Stok < $totalQtyDigunakan) {
+            //     $errorMsg = "❌ Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$totalQtyDigunakan}";
+            //     Log::error($errorMsg);
+            //     throw new \Exception($errorMsg);
+            // }
 
             // KURANGI STOK - PAKAI METHOD YANG SUDAH TERBUKTI BEKERJA
             try {

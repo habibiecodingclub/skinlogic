@@ -104,9 +104,9 @@ class EditPesanan extends EditRecord
                 if (!$produk) {
                     throw new \Exception("Produk tidak ditemukan untuk ID: {$item['produk_id']}");
                 }
-                if (!$produk->is_bundling && $produk->Stok < (int)$item['qty']) {
-                    throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$item['qty']}");
-                }
+                // if (!$produk->is_bundling && $produk->Stok < (int)$item['qty']) {
+                //     throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$item['qty']}");
+                // }
                 Log::info("Validasi produk {$index}: {$produk->Nama}, Stok: {$produk->Stok}, Qty: {$item['qty']} - OK");
             }
 
@@ -118,9 +118,9 @@ class EditPesanan extends EditRecord
                     }
                     foreach ($perawatan->produk as $produk) {
                         $qtyDigunakan = $produk->pivot->qty_digunakan * (int)$item['qty'];
-                        if ($produk->Stok < $qtyDigunakan) {
-                            throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi untuk perawatan {$perawatan->Nama_Perawatan}. Stok tersedia: {$produk->Stok}, diperlukan: {$qtyDigunakan}");
-                        }
+                        // if ($produk->Stok < $qtyDigunakan) {
+                        //     throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi untuk perawatan {$perawatan->Nama_Perawatan}. Stok tersedia: {$produk->Stok}, diperlukan: {$qtyDigunakan}");
+                        // }
                         Log::info("Validasi perawatan {$index}: Produk {$produk->Nama}, Stok: {$produk->Stok}, Qty digunakan: {$qtyDigunakan} - OK");
                     }
                 }

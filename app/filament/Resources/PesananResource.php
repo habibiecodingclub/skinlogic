@@ -154,30 +154,30 @@ class PesananResource extends Resource
                                         $produkId = $get('produk_id');
                                         if ($produkId) {
                                             $produk = Produk::find($produkId);
-                                            if ($produk) {
-                                                if ($produk->is_bundling) {
-                                                    // **VALIDASI STOK BUNDLING**
-                                                    // $stokTersedia = $produk->getStokTersediaAttribute();
-                                                    // if ((int)$state > $stokTersedia) {
-                                                    //     $set('qty', $stokTersedia);
-                                                    //     Notification::make()
-                                                    //         ->title('Stok Bundling Tidak Cukup')
-                                                    //         ->body("Stok bundling hanya tersedia {$stokTersedia} unit")
-                                                    //         ->danger()
-                                                    //         ->send();
-                                                    // }
-                                                } else {
-                                                    // **VALIDASI STOK PRODUK BIASA**
-                                                    if ((int)$state > $produk->Stok) {
-                                                        $set('qty', $produk->Stok);
-                                                        Notification::make()
-                                                            ->title('Stok Tidak Cukup')
-                                                            ->body("Stok hanya tersedia {$produk->Stok} unit")
-                                                            ->danger()
-                                                            ->send();
-                                                    }
-                                                }
-                                            }
+                                        //     if ($produk) {
+                                        //         // if ($produk->is_bundling) {
+                                        //         //     // **VALIDASI STOK BUNDLING**
+                                        //         //     // $stokTersedia = $produk->getStokTersediaAttribute();
+                                        //         //     // if ((int)$state > $stokTersedia) {
+                                        //         //     //     $set('qty', $stokTersedia);
+                                        //         //     //     Notification::make()
+                                        //         //     //         ->title('Stok Bundling Tidak Cukup')
+                                        //         //     //         ->body("Stok bundling hanya tersedia {$stokTersedia} unit")
+                                        //         //     //         ->danger()
+                                        //         //     //         ->send();
+                                        //         //     // }
+                                        //         // } else {
+                                        //         //     // **VALIDASI STOK PRODUK BIASA**
+                                        //         //     // if ((int)$state > $produk->Stok) {
+                                        //         //     //     $set('qty', $produk->Stok);
+                                        //         //     //     Notification::make()
+                                        //         //     //         ->title('Stok Tidak Cukup')
+                                        //         //     //         ->body("Stok hanya tersedia {$produk->Stok} unit")
+                                        //         //     //         ->danger()
+                                        //         //     //         ->send();
+                                        //         //     // }
+                                        //         // }
+                                        //     }
                                         }
                                     }),
 
