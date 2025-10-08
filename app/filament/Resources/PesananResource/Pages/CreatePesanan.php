@@ -46,135 +46,122 @@ class CreatePesanan extends CreateRecord
         Log::info("📦 ALL FORM DATA: ", $data);
 
         return DB::transaction(function () use ($data) {
-            try {
-                // 1. Buat pesanan
-                $pesanan = Pesanan::create([
-                    'pelanggan_id' => $data['pelanggan_id'],
-                    'Metode_Pembayaran' => $data['Metode_Pembayaran'],
-                    'status' => $data['status'],
-                    'created_at' => now(),
-                ]);
+        try {
+            // 1. Buat pesanan
+            $pesanan = Pesanan::create([
+                'pelanggan_id' => $data['pelanggan_id'],
+                'Metode_Pembayaran' => $data['Metode_Pembayaran'],
+                'status' => $data['status'],
+                'created_at' => now(),
+            ]);
 
-                Log::info("📝 Pesanan created: #{$pesanan->id}");
+            Log::info("📝 Pesanan created: #{$pesanan->id}");
 
-                // 2. PROSES PRODUK - DENGAN HANDLING BUNDLING & VALIDASI STOK
-                if (!empty($data['items_produk']) && is_array($data['items_produk'])) {
-                    Log::info("🛒 Processing produk dari items_produk: " . count($data['items_produk']) . " items");
+            // 2. PROSES PRODUK - DENGAN HANDLING BUNDLING & VALIDASI STOK
+            if (!empty($data['items_produk']) && is_array($data['items_produk'])) {
+                Log::info("🛒 Processing produk dari items_produk: " . count($data['items_produk']) . " items");
 
-                    // **VALIDASI STOK SEBELUM PROSES**
-                    foreach ($data['items_produk'] as $index => $item) {
-                        $produkId = $item['produk_id'] ?? null;
-                        $qty = $item['qty'] ?? 1;
+                // **VALIDASI STOK SEBELUM PROSES (Hanya untuk produk non-bundling)**
+                foreach ($data['items_produk'] as $index => $item) {
+                    $produkId = $item['produk_id'] ?? null;
+                    $qty = $item['qty'] ?? 1;
 
-                        if (!$produkId) continue;
+                    if (!$produkId) continue;
 
-                        $produk = Produk::with(['produkBundlingItems.produk'])->find($produkId);
-                        if (!$produk) {
-                            throw new \Exception("Produk tidak ditemukan untuk ID: {$produkId}");
-                        }
-
-                        if ($data['status'] === 'Berhasil') {
-                            if ($produk->is_bundling) {
-                                // **VALIDASI STOK BUNDLING**
-                                foreach ($produk->produkBundlingItems as $bundlingItem) {
-                                    $totalQtyDigunakan = $bundlingItem->qty * $qty;
-                                    if ($bundlingItem->produk->Stok < $totalQtyDigunakan) {
-                                        throw new \Exception(
-                                            "Stok tidak mencukupi untuk bundling {$produk->Nama}. " .
-                                            "Produk {$bundlingItem->produk->Nama} hanya tersedia {$bundlingItem->produk->Stok}, " .
-                                            "diperlukan {$totalQtyDigunakan}"
-                                        );
-                                    }
-                                }
-                                Log::info("🎁✅ Validasi stok bundling {$produk->Nama} - OK");
-                            } else {
-                                // **VALIDASI STOK PRODUK BIASA**
-                                if ($produk->Stok < $qty) {
-                                    throw new \Exception(
-                                        "Stok produk {$produk->Nama} tidak mencukupi. " .
-                                        "Stok tersedia: {$produk->Stok}, diperlukan: {$qty}"
-                                    );
-                                }
-                                Log::info("🛒✅ Validasi stok produk {$produk->Nama} - OK");
-                            }
-                        }
+                    $produk = Produk::with(['produkBundlingItems.produk'])->find($produkId);
+                    if (!$produk) {
+                        throw new \Exception("Produk tidak ditemukan untuk ID: {$produkId}");
                     }
 
-                    // **PROSES PENYIMPANAN DAN PENGURANGAN STOK**
-                    foreach ($data['items_produk'] as $index => $item) {
-                        $produkId = $item['produk_id'] ?? null;
-                        $qty = $item['qty'] ?? 1;
-                        $harga = $item['harga'] ?? 0;
-
-                        if (!$produkId) {
-                            Log::warning("🛒 Skipping produk item {$index} - produk_id tidak ada");
-                            continue;
+                    if ($data['status'] === 'Berhasil' && !$produk->is_bundling) {
+                        // **VALIDASI STOK HANYA UNTUK PRODUK NON-BUNDLING**
+                        if ($produk->Stok < $qty) {
+                            throw new \Exception(
+                                "Stok produk {$produk->Nama} tidak mencukupi. " .
+                                "Stok tersedia: {$produk->Stok}, diperlukan: {$qty}"
+                            );
                         }
-
-                        $produk = Produk::with(['produkBundlingItems.produk'])->find($produkId);
-                        if (!$produk) {
-                            throw new \Exception("Produk tidak ditemukan untuk ID: {$produkId}");
-                        }
-
-                        // **LOG DETAIL HARGA UNTUK DEBUG**
-                        Log::info("🛒🔍 Detail harga produk {$produk->Nama}:");
-                        Log::info("🛒🔍   - Harga dari form: {$harga}");
-                        Log::info("🛒🔍   - Harga normal: {$produk->Harga}");
-                        Log::info("🛒🔍   - Harga bundling: " . ($produk->harga_bundling ?? 'null'));
-                        Log::info("🛒🔍   - is_bundling: " . ($produk->is_bundling ? 'true' : 'false'));
-
-                        // **FALLBACK: JIKA HARGA 0, AMBIL HARGA YANG BENAR**
-                        if ($harga == 0) {
-                            $harga = $produk->is_bundling ? $produk->harga_bundling : $produk->Harga;
-                            Log::info("🛒⚠️ Harga 0, menggunakan harga " . ($produk->is_bundling ? 'bundling' : 'normal') . ": {$harga}");
-                        }
-
-                        // **VALIDASI HARGA AKHIR**
-                        if ($harga == 0) {
-                            Log::warning("🛒⚠️ Harga masih 0 setelah fallback, menggunakan harga default");
-                            $harga = $produk->is_bundling ? ($produk->harga_bundling ?? 0) : $produk->Harga;
-                        }
-
-                        Log::info("🛒 Final harga untuk {$produk->Nama}: {$harga}");
-
-                        // CREATE PESANAN_PRODUK RECORD
-                        $pesananProduk = PesananProduk::create([
-                            'pesanan_id' => $pesanan->id,
-                            'produk_id' => $produkId,
-                            'qty' => $qty,
-                            'harga' => $harga,
-                        ]);
-
-                        Log::info("🛒✅ PesananProduk created - ID: {$pesananProduk->id}, Produk: {$produk->Nama}, Qty: {$qty}, Harga: {$harga}");
-
-                        // Reduce stock for products
-                        if ($data['status'] === 'Berhasil') {
-                            if ($produk->is_bundling) {
-                                // **PRODUK BUNDLING: Kurangi stok semua produk dalam bundling**
-                                Log::info("🎁🔄 Calling kurangiStokBundling for produk {$produk->Nama}");
-                                $produk->kurangiStokBundling(
-                                    (int)$qty,
-                                    "Penjualan pesanan #{$pesanan->id}",
-                                    $pesanan->created_at
-                                );
-                                Log::info("🎁✅ Berhasil mengurangi stok bundling untuk produk {$produk->Nama}");
-                            } else {
-                                // **PRODUK BIASA: Kurangi stok seperti biasa**
-                                Log::info("🛒🔄 Calling kurangiStok for produk {$produk->Nama}");
-                                $produk->kurangiStok(
-                                    (int)$qty,
-                                    "Penjualan pesanan #{$pesanan->id}",
-                                    $pesanan->created_at
-                                );
-                                Log::info("🛒✅ Berhasil mengurangi stok untuk produk {$produk->Nama}");
-                            }
-                        } else {
-                            Log::info("🛒⏸️ Skipping stock reduction - status bukan 'Berhasil'");
-                        }
+                        Log::info("🛒✅ Validasi stok produk {$produk->Nama} - OK");
+                    } else {
+                        Log::info("🎁 Skipping stock validation for bundling product {$produk->Nama}");
                     }
-                } else {
-                    Log::warning("🛒❌ Tidak ada data produk di items_produk");
                 }
+
+                // **PROSES PENYIMPANAN DAN PENGURANGAN STOK**
+                foreach ($data['items_produk'] as $index => $item) {
+                    $produkId = $item['produk_id'] ?? null;
+                    $qty = $item['qty'] ?? 1;
+                    $harga = $item['harga'] ?? 0;
+
+                    if (!$produkId) {
+                        Log::warning("🛒 Skipping produk item {$index} - produk_id tidak ada");
+                        continue;
+                    }
+
+                    $produk = Produk::with(['produkBundlingItems.produk'])->find($produkId);
+                    if (!$produk) {
+                        throw new \Exception("Produk tidak ditemukan untuk ID: {$produkId}");
+                    }
+
+                    // **LOG DETAIL HARGA UNTUK DEBUG**
+                    Log::info("🛒🔍 Detail harga produk {$produk->Nama}:");
+                    Log::info("🛒🔍   - Harga dari form: {$harga}");
+                    Log::info("🛒🔍   - Harga normal: {$produk->Harga}");
+                    Log::info("🛒🔍   - Harga bundling: " . ($produk->harga_bundling ?? 'null'));
+                    Log::info("🛒🔍   - is_bundling: " . ($produk->is_bundling ? 'true' : 'false'));
+
+                    // **FALLBACK: JIKA HARGA 0, AMBIL HARGA YANG BENAR**
+                    if ($harga == 0) {
+                        $harga = $produk->is_bundling ? $produk->harga_bundling : $produk->Harga;
+                        Log::info("🛒⚠️ Harga 0, menggunakan harga " . ($produk->is_bundling ? 'bundling' : 'normal') . ": {$harga}");
+                    }
+
+                    // **VALIDASI HARGA AKHIR**
+                    if ($harga == 0) {
+                        Log::warning("🛒⚠️ Harga masih 0 setelah fallback, menggunakan harga default");
+                        $harga = $produk->is_bundling ? ($produk->harga_bundling ?? 0) : $produk->Harga;
+                    }
+
+                    Log::info("🛒 Final harga untuk {$produk->Nama}: {$harga}");
+
+                    // CREATE PESANAN_PRODUK RECORD
+                    $pesananProduk = PesananProduk::create([
+                        'pesanan_id' => $pesanan->id,
+                        'produk_id' => $produkId,
+                        'qty' => $qty,
+                        'harga' => $harga,
+                    ]);
+
+                    Log::info("🛒✅ PesananProduk created - ID: {$pesananProduk->id}, Produk: {$produk->Nama}, Qty: {$qty}, Harga: {$harga}");
+
+                    // Reduce stock for products
+                    if ($data['status'] === 'Berhasil') {
+                        if ($produk->is_bundling) {
+                            // **PRODUK BUNDLING: Kurangi stok semua produk dalam bundling tanpa validasi**
+                            Log::info("🎁🔄 Calling kurangiStokBundling for produk {$produk->Nama}");
+                            $produk->kurangiStokBundling(
+                                (int)$qty,
+                                "Penjualan pesanan #{$pesanan->id}",
+                                $pesanan->created_at
+                            );
+                            Log::info("🎁✅ Berhasil mengurangi stok bundling untuk produk {$produk->Nama}");
+                        } else {
+                            // **PRODUK BIASA: Kurangi stok seperti biasa**
+                            Log::info("🛒🔄 Calling kurangiStok for produk {$produk->Nama}");
+                            $produk->kurangiStok(
+                                (int)$qty,
+                                "Penjualan pesanan #{$pesanan->id}",
+                                $pesanan->created_at
+                            );
+                            Log::info("🛒✅ Berhasil mengurangi stok untuk produk {$produk->Nama}");
+                        }
+                    } else {
+                        Log::info("🛒⏸️ Skipping stock reduction - status bukan 'Berhasil'");
+                    }
+                }
+            } else {
+                Log::warning("🛒❌ Tidak ada data produk di items_produk");
+            }
 
                 // 3. PROSES PERAWATAN - TETAP SAMA
                 if (!empty($data['items_perawatan']) && is_array($data['items_perawatan'])) {

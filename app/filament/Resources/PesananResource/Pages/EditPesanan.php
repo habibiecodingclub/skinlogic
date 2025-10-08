@@ -100,15 +100,15 @@ class EditPesanan extends EditRecord
             // Validasi stok untuk produk baru (detailProduk)
             if ($data['status'] === 'Berhasil') {
                 foreach ($data['detailProduk'] ?? [] as $index => $item) {
-                    $produk = Produk::find($item['produk_id']);
-                    if (!$produk) {
-                        throw new \Exception("Produk tidak ditemukan untuk ID: {$item['produk_id']}");
-                    }
-                    if ($produk->Stok < (int)$item['qty']) {
-                        throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$item['qty']}");
-                    }
-                    Log::info("Validasi produk {$index}: {$produk->Nama}, Stok: {$produk->Stok}, Qty: {$item['qty']} - OK");
+                $produk = Produk::find($item['produk_id']);
+                if (!$produk) {
+                    throw new \Exception("Produk tidak ditemukan untuk ID: {$item['produk_id']}");
                 }
+                if (!$produk->is_bundling && $produk->Stok < (int)$item['qty']) {
+                    throw new \Exception("Stok produk {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$item['qty']}");
+                }
+                Log::info("Validasi produk {$index}: {$produk->Nama}, Stok: {$produk->Stok}, Qty: {$item['qty']} - OK");
+            }
 
                 // Validasi stok untuk produk dalam perawatan baru (detailPerawatan) - YANG DIPERBAIKI
                 foreach ($data['detailPerawatan'] ?? [] as $index => $item) {
@@ -134,24 +134,32 @@ class EditPesanan extends EditRecord
             ]);
 
             // Handle produk changes
-            $record->detailProduk()->delete();
-            if (isset($data['detailProduk'])) {
-                foreach ($data['detailProduk'] as $index => $item) {
-                    $produk = Produk::find($item['produk_id']);
-                    if (!$produk) {
-                        throw new \Exception("Produk tidak ditemukan untuk ID: {$item['produk_id']}");
-                    }
+         $record->detailProduk()->delete();
+        if (isset($data['detailProduk'])) {
+            foreach ($data['detailProduk'] as $index => $item) {
+                $produk = Produk::find($item['produk_id']);
+                if (!$produk) {
+                    throw new \Exception("Produk tidak ditemukan untuk ID: {$item['produk_id']}");
+                }
 
-                    $record->detailProduk()->create([
-                        'produk_id' => $item['produk_id'],
-                        'qty' => $item['qty'],
-                        'harga' => $item['harga'],
-                    ]);
+                $record->detailProduk()->create([
+                    'produk_id' => $item['produk_id'],
+                    'qty' => $item['qty'],
+                    'harga' => $item['harga'],
+                ]);
 
-                    if ($data['status'] === 'Berhasil') {
-                        Log::info("Calling kurangiStok for product {$produk->Nama} (edit)");
+                if ($data['status'] === 'Berhasil') {
+                    Log::info("Calling kurangiStok for product {$produk->Nama} (edit)");
+                    if ($produk->is_bundling) {
+                        $produk->kurangiStokBundling(
+                            (int)$item['qty'],
+                            "Penjualan pesanan #{$record->id} (edit)",
+                            $record->created_at
+                        );
+                        Log::info("Stok reduced for bundling product {$produk->Nama}");
+                    } else {
                         $produk->kurangiStok(
-                            $item['qty'],
+                            (int)$item['qty'],
                             "Penjualan pesanan #{$record->id} (edit)",
                             $record->created_at
                         );
@@ -159,7 +167,7 @@ class EditPesanan extends EditRecord
                     }
                 }
             }
-
+        }
             // Handle perawatan changes - YANG DIPERBAIKI
             $record->detailPerawatan()->delete();
             if (isset($data['detailPerawatan'])) {

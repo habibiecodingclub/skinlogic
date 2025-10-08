@@ -128,32 +128,31 @@ public function getStokTersediaAttribute()
     /**
      * Method untuk mengurangi stok bundling
      */
-    public function kurangiStokBundling($quantity, $keterangan = null, $tanggal = null)
+    public function kurangiStokBundling($jumlah, $keterangan = null, $tanggal = null)
     {
         Log::info("🎁 === KURANGI STOK BUNDLING ===");
         Log::info("🎁 Bundling: {$this->Nama} (ID: {$this->id})");
-        Log::info("🎁 Quantity: {$quantity}");
+        Log::info("🎁 Quantity: {$jumlah}");
 
         if (!$this->is_bundling) {
             throw new \Exception("Produk {$this->Nama} bukan produk bundling");
         }
 
-        return DB::transaction(function () use ($quantity, $keterangan, $tanggal) {
+        return DB::transaction(function () use ($jumlah, $keterangan, $tanggal) {
             // Kurangi stok untuk setiap produk dalam bundling
-            foreach ($this->produkBundlingItems as $item) {
-                $produk = $item->produk;
-                $totalQtyDigunakan = $item->qty * $quantity;
+          foreach ($this->produkBundlingItems as $item) {
+            $totalQty = $item->qty * $jumlah;
+            // No stock validation to allow negative stock
+            $item->produk->decrement('Stok', $totalQty);
 
-                Log::info("🎁 Kurangi stok produk: {$produk->Nama}");
-                Log::info("🎁   - Qty per bundling: {$item->qty}");
-                Log::info("🎁   - Total qty digunakan: {$totalQtyDigunakan}");
-
-                $produk->kurangiStok(
-                    $totalQtyDigunakan,
-                    "Penggunaan untuk bundling: {$this->Nama}" . ($keterangan ? " ({$keterangan})" : ""),
-                    $tanggal ?? now()
-                );
-            }
+            StokMovement::create([
+                'produk_id' => $item->produk_id,
+                'tipe' => 'keluar',
+                'jumlah' => $totalQty,
+                'keterangan' => $keterangan . " (Bundling: {$this->Nama})",
+                'tanggal' => $tanggal,
+            ]);
+        }
 
             Log::info("🎁✅ Berhasil mengurangi stok semua produk dalam bundling");
         });
@@ -210,11 +209,11 @@ public function getStokTersediaAttribute()
             Log::info("🔻 Stok sebelum: {$produk->Stok}");
 
             // Validasi stok cukup
-            if ($produk->Stok < $jumlah) {
-                $errorMsg = "Stok {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$jumlah}";
-                Log::error("🔻 {$errorMsg}");
-                throw new \Exception($errorMsg);
-            }
+            // if ($produk->Stok < $jumlah) {
+            //     $errorMsg = "Stok {$produk->Nama} tidak mencukupi. Stok tersedia: {$produk->Stok}, diperlukan: {$jumlah}";
+            //     Log::error("🔻 {$errorMsg}");
+            //     throw new \Exception($errorMsg);
+            // }
 
             // Update stok
             $stokSebelum = $produk->Stok;

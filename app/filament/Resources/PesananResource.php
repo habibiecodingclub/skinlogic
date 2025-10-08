@@ -157,15 +157,15 @@ class PesananResource extends Resource
                                             if ($produk) {
                                                 if ($produk->is_bundling) {
                                                     // **VALIDASI STOK BUNDLING**
-                                                    $stokTersedia = $produk->getStokTersediaAttribute();
-                                                    if ((int)$state > $stokTersedia) {
-                                                        $set('qty', $stokTersedia);
-                                                        Notification::make()
-                                                            ->title('Stok Bundling Tidak Cukup')
-                                                            ->body("Stok bundling hanya tersedia {$stokTersedia} unit")
-                                                            ->danger()
-                                                            ->send();
-                                                    }
+                                                    // $stokTersedia = $produk->getStokTersediaAttribute();
+                                                    // if ((int)$state > $stokTersedia) {
+                                                    //     $set('qty', $stokTersedia);
+                                                    //     Notification::make()
+                                                    //         ->title('Stok Bundling Tidak Cukup')
+                                                    //         ->body("Stok bundling hanya tersedia {$stokTersedia} unit")
+                                                    //         ->danger()
+                                                    //         ->send();
+                                                    // }
                                                 } else {
                                                     // **VALIDASI STOK PRODUK BIASA**
                                                     if ((int)$state > $produk->Stok) {
