@@ -3,9 +3,11 @@
 use App\Http\Controllers\LaporanStokController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get("/", function () {
+    return view("landing.index");
 });
 
-Route::get('/laporan/stok/cetak', [LaporanStokController::class, 'cetak'])
-    ->name('laporan.stok.cetak');
+Route::get("/laporan/stok/cetak", [
+    LaporanStokController::class,
+    "cetak",
+])->name("laporan.stok.cetak");
