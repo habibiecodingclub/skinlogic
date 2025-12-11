@@ -3,7 +3,7 @@
      @mouseleave="hovered = false"
      class="bg-white border border-gray-200 rounded-lg transition-all duration-300 hover:shadow-2xl relative h-full min-h-[560px] flex flex-col overflow-hidden">
 
-    <!-- Hover blue border -->
+    <!-- Hover blue border arham coba deh okeoke-->
     <div class="absolute inset-0 border-[3px] rounded-lg transition-all duration-500 pointer-events-none border-blue-600 z-30"
          :class="hovered ? 'opacity-100' : 'opacity-0'"></div>
 
