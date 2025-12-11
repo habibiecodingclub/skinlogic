@@ -5,6 +5,7 @@
     @include('landing.sections.hero')
     @include('landing.sections.why-skinlogic')
     @include('landing.sections.offerings')
+    @include('landing.sections.produk')
     @include('landing.sections.promo-banner')
     @include('landing.sections.testimonials')
     @include('landing.sections.visit-clinic')
