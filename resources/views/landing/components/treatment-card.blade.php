@@ -9,10 +9,10 @@
 
     <!-- Ornament di paling atas -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none w-full flex justify-center">
-        <img src="{{ asset('images/card-ornament.jpg') }}"
+        <img src="{{ asset('images/ornament-treatment.png') }}"
              alt="ornament"
              class="w-[500px] h-auto object-contain select-none transition-all duration-700"
-             :class="hovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'" />
+             :class="hovered ? 'opacity-90 scale-100' : 'opacity-0 scale-95'" />
     </div>
 
     <!-- Card Content -->
@@ -63,5 +63,3 @@
         </div>
     </div>
 </div>
-
-<!-- tess -->

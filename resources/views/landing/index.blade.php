@@ -4,7 +4,7 @@
     @include('landing.sections.header')
     @include('landing.sections.hero')
     @include('landing.sections.why-skinlogic')
-    @include('landing.sections.offerings')
+    @include('landing.sections.apa-yang-kami-tawarkan')
     @include('landing.sections.produk')
     @include('landing.sections.promo-banner')
     @include('landing.sections.testimonials')

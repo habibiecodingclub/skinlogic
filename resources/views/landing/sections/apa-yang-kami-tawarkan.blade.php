@@ -21,7 +21,7 @@
         <!-- Treatment Cards Grid -->
         <div class="grid md:grid-cols-3 gap-8">
             @include('landing.components.treatment-card', [
-                'image' => asset('images/facial-acne.jpg'),
+                'image' => asset('images/produk1.jpeg'),
                 'title' => 'Facial Acne',
                 'category' => 'Facial',
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.....',
@@ -30,7 +30,7 @@
             ])
 
             @include('landing.components.treatment-card', [
-                'image' => asset('images/facial-acne.jpg'),
+                'image' => asset('images/produk2.jpeg'),
                 'title' => 'Facial Acne',
                 'category' => 'Facial',
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.....',
@@ -39,7 +39,7 @@
             ])
 
             @include('landing.components.treatment-card', [
-                'image' => asset('images/facial-acne.jpg'),
+                'image' => asset('images/produk3.jpeg'),
                 'title' => 'Facial Acne',
                 'category' => 'Facial',
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.....',
