@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <header x-data="{ open: false }" class="absolute top-0 left-0 w-full z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div class="text-white text-xl font-bold tracking-wide">
@@ -19,10 +20,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M4 6h16M4 12h16M4 18h16"/>
 =======
+=======
+>>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
 {{-- resources/views/components/header.blade.php --}}
 <header x-data="{ mobileMenuOpen: false, scrolled: false }"
         x-init="window.addEventListener('scroll', () => { scrolled = window.pageYOffset > 10 })"
-        :class="scrolled ? 'bg-[#001a4d]/95 backdrop-blur-md shadow-lg' : 'bg-[#001a4d]/80 backdrop-blur-sm'"
+        :class="scrolled ? 'bg-[#001a4d]/65 backdrop-blur-md shadow-lg' : 'bg-[#001a4d]/90 backdrop-blur-sm'"
         class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,11 +91,15 @@
                 </svg>
                 <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+<<<<<<< HEAD
 >>>>>>> 68332a4f64a2dc5abd35117a56440a5796d61d3e
+=======
+>>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
                 </svg>
             </button>
         </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     <div x-show="open" x-transition class="md:hidden bg-black bg-opacity-80 text-white px-6 py-4 space-y-4">
         {{-- Update juga link di menu Mobile --}}
@@ -108,6 +115,8 @@
     </div>
 </header>
 =======
+=======
+>>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
         {{-- Mobile Navigation --}}
         <nav x-show="mobileMenuOpen"
              x-transition:enter="transition ease-out duration-200"
@@ -159,4 +168,7 @@
 
 {{-- Spacer untuk kompensasi fixed header --}}
 <div class="h-20"></div>
+<<<<<<< HEAD
 >>>>>>> 68332a4f64a2dc5abd35117a56440a5796d61d3e
+=======
+>>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
