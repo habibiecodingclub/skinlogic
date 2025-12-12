@@ -8,7 +8,7 @@
         <div class="flex items-center justify-between h-20">
 
             {{-- Logo --}}
-            <a href="#home" class="flex items-center gap-3 group">
+            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                 <img src="{{ asset('images/brandSL.png') }}"
                      alt="SkinLogic Logo"
                      class="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300">
@@ -20,7 +20,7 @@
 
             {{-- Desktop Navigation --}}
             <nav class="hidden lg:flex items-center gap-8">
-                <a href="#home"
+                <a href="{{ route('home') }}"
                    class="text-white hover:text-blue-300 font-medium transition-colors duration-200 relative group font-poppins">
                     Home
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
@@ -32,7 +32,7 @@
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
                 </a>
 
-                <a href="#perawatan"
+                <a href="{{ route('perawatan') }}"
                    class="text-white hover:text-blue-300 font-medium transition-colors duration-200 relative group font-poppins">
                     Perawatan
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
@@ -83,7 +83,7 @@
              class="lg:hidden py-4 border-t border-white/10">
 
             <div class="flex flex-col gap-2">
-                <a href="#home"
+                <a href="{{ route('home') }}"
                    class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
                     Home
                 </a>
@@ -93,7 +93,7 @@
                     Produk
                 </a>
 
-                <a href="#perawatan"
+                <a href="{{ route('perawatan') }}"
                    class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
                     Perawatan
                 </a>
