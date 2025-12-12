@@ -1,13 +1,18 @@
 <?php
 
-use App\Http\Controllers\LaporanStokController;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", function () {
-    return view("landing.index");
-});
+// 1. Route Home (WAJIB ADA ->name('home'))
+Route::get('/', function () {
+    return view('landing.index'); // Pastikan ini sesuai nama file view utama Anda
+})->name('home');
 
-Route::get("/laporan/stok/cetak", [
-    LaporanStokController::class,
-    "cetak",
-])->name("laporan.stok.cetak");
+// 2. Route Halaman Produk
+Route::get('/produk', function () {
+    return view('landing.pages.semua-produk'); 
+})->name('produk.index');
+
+// 3. Route Halaman Artikel
+Route::get('/artikel', function () {
+    return view('landing.pages.semua-artikel');
+})->name('artikel.index');
