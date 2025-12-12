@@ -2,19 +2,19 @@
     $articles = [
         [
             // Ganti dengan asset('images/...') jika gambar sudah ada di folder public/images
-            'image' => 'https://images.unsplash.com/photo-1556228720-1957be83f06c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', 
+            'image' => asset('images/treatment1.jpeg'),
             'category' => 'Tips',
             'title' => '5 Tips Merawat Kulit di Musim Panas',
             'excerpt' => 'Musim panas bisa bikin kulitmu kering. Yuk simak tips menjaga kelembapan kulit agar tetap glowing.',
         ],
         [
-            'image' => 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            'image' => asset('images/treatment2.jpeg'),
             'category' => 'Promo',
             'title' => 'Promo Spesial Akhir Tahun',
             'excerpt' => 'Dapatkan diskon hingga 40% untuk semua layanan SkinLogic selama bulan Desember ini.',
         ],
         [
-            'image' => 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            'image' => asset('images/treatment1.jpeg'),
             'category' => 'Review',
             'title' => 'Review Treatment Laser SkinLogic',
             'excerpt' => 'Simak pengalaman pelanggan setelah mencoba treatment laser untuk mengatasi bekas jerawat.',
