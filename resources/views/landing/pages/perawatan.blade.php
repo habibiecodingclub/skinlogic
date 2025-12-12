@@ -412,3 +412,5 @@
         });
     </script>
 @endsection
+
+// gini mo dlu deh
