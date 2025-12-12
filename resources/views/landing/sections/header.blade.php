@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<header x-data="{ open: false }" class="absolute top-0 left-0 w-full z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div class="text-white text-xl font-bold tracking-wide">
-            SkinLogic
-        </div>
-
-        <nav class="hidden md:flex space-x-6 text-white font-medium">
-            <a href="{{ route('home') }}">Home</a>
-            <a href="{{ route('produk.index') }}">Produk</a>
-            <a href="{{ route('home') }}#perawatan">Perawatan</a> {{-- Pakai route home agar bisa balik dari halaman detail --}}
-            <a href="{{ route('artikel.index') }}">Artikel</a>
-         </nav>
-
-        <div class="md:hidden">
-            <button @click="open = !open" class="text-white focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 6h16M4 12h16M4 18h16"/>
-=======
-=======
->>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
 {{-- resources/views/components/header.blade.php --}}
 <header x-data="{ mobileMenuOpen: false, scrolled: false }"
         x-init="window.addEventListener('scroll', () => { scrolled = window.pageYOffset > 10 })"
@@ -91,32 +67,10 @@
                 </svg>
                 <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-<<<<<<< HEAD
->>>>>>> 68332a4f64a2dc5abd35117a56440a5796d61d3e
-=======
->>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
                 </svg>
             </button>
         </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <div x-show="open" x-transition class="md:hidden bg-black bg-opacity-80 text-white px-6 py-4 space-y-4">
-        {{-- Update juga link di menu Mobile --}}
-        <a href="{{ route('home') }}" class="block">Home</a>
-        <a href="{{ route('produk.index') }}" class="block">Produk</a>
-        <a href="{{ route('home') }}#perawatan" class="block">Perawatan</a>
-        <a href="{{ route('home') }}#tentang" class="block">Tentang Kami</a>
-        <a href="{{ route('artikel.index') }}" class="block">Artikel</a>
-        
-        <a href="#reservasi" class="block bg-white text-skinlogic px-4 py-2 rounded-full">
-            Reservasi Sekarang
-        </a>
-    </div>
-</header>
-=======
-=======
->>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
         {{-- Mobile Navigation --}}
         <nav x-show="mobileMenuOpen"
              x-transition:enter="transition ease-out duration-200"
@@ -168,7 +122,3 @@
 
 {{-- Spacer untuk kompensasi fixed header --}}
 <div class="h-20"></div>
-<<<<<<< HEAD
->>>>>>> 68332a4f64a2dc5abd35117a56440a5796d61d3e
-=======
->>>>>>> 3dfddb82448242bd02196734f77e86d3b122f906
