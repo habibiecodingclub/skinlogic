@@ -5,9 +5,9 @@
     @include('landing.sections.header')
 
     {{-- Hero Section with Breadcrumb --}}
-    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-16">
-        <div class="absolute inset-0 opacity-5">
-            <div class="absolute inset-0" style="background-image: url('{{ asset('images/pattern-treatment.png') }}'); background-size: cover;"></div>
+    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-48 -mt-6">
+        <div class="absolute inset-0 opacity-50">
+            <div class="absolute inset-0" style="background-image: url('{{ asset('images/promo-banner.png') }}'); background-size: cover;"></div>
         </div>
 
         <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
