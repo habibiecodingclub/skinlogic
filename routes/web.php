@@ -10,12 +10,11 @@ Route::get("/", function () {
 // 2. Route Halaman Produk
 Route::get("/produk", function () {
     return view("landing.pages.semua-produk");
-})->name("produk.index");
+})->name("produk");
 
-// 3. Route Halaman Artikel
 Route::get("/artikel", function () {
     return view("landing.pages.semua-artikel");
-})->name("artikel.index");
+})->name("artikel-index");
 
 Route::get("/perawatan", function () {
     return view("landing.pages.perawatan");
