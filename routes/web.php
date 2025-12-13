@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TreatmentController;
 
 // 1. Route Home (WAJIB ADA ->name('home'))
 Route::get("/", function () {
@@ -18,4 +19,8 @@ Route::get("/artikel", function () {
 
 Route::get("/perawatan", function () {
     return view("landing.pages.perawatan");
-})->name("perawatan");
+})->name("perawatan.index");
+
+Route::get("/perawatan/{slug}", [TreatmentController::class, "show"])->name(
+    "perawatan.show",
+);

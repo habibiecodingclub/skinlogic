@@ -5,7 +5,7 @@
     @include('landing.sections.header')
 
     {{-- Hero Section Perawatan --}}
-    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-48">
+    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-48 -mt-6">
         <div class="absolute inset-0 opacity-50">
             <div class="absolute inset-0" style="background-image: url('{{ asset('images/promo-banner.png') }}'); background-size: cover;"></div>
         </div>
@@ -75,7 +75,7 @@
                                         'category' => 'Facial',
                                         'description' => 'Perawatan khusus untuk mengatasi jerawat dan bekasnya dengan teknologi terkini dan bahan aktif yang aman',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-acne'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">

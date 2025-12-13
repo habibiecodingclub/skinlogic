@@ -32,7 +32,7 @@
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
                 </a>
 
-                <a href="{{ route('perawatan') }}"
+                <a href="{{ route('perawatan.index') }}"
                    class="text-white hover:text-blue-300 font-medium transition-colors duration-200 relative group font-poppins">
                     Perawatan
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
@@ -93,7 +93,7 @@
                     Produk
                 </a>
 
-                <a href="{{ route('perawatan') }}"
+                <a href="{{ route('perawatan.index') }}"
                    class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
                     Perawatan
                 </a>
