@@ -24,18 +24,18 @@
                 'image' => asset('images/produk1.jpeg'),
                 'title' => 'Facial Acne',
                 'category' => 'Facial',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.....',
+                'description' => 'Perawatan khusus untuk mengatasi jerawat dan bekasnya dengan teknologi.....',
                 'appointmentUrl' => '#',
-                'detailUrl' => '#'
+                'detailUrl' => route('perawatan.show', ['slug' => 'facial-acne'])
             ])
 
             @include('landing.components.treatment-card', [
                 'image' => asset('images/produk2.jpeg'),
-                'title' => 'Facial Acne',
-                'category' => 'Facial',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.....',
+                'title' => 'Laser Hair Removal',
+                'category' => 'Laser',
+                'description' => 'Menghilangkan bulu secara permanen dengan teknologi laser yang aman dan.....',
                 'appointmentUrl' => '#',
-                'detailUrl' => '#'
+                'detailUrl' => route('perawatan.show', ['slug' => 'laser-hair-removal'])
             ])
 
             @include('landing.components.treatment-card', [

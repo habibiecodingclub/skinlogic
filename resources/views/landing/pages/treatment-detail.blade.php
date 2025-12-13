@@ -6,21 +6,21 @@
 
     {{-- Hero Section with Breadcrumb --}}
     <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-48 -mt-6">
-        <div class="absolute inset-0 opacity-50">
-            <div class="absolute inset-0" style="background-image: url('{{ asset('images/promo-banner.png') }}'); background-size: cover;"></div>
+        <div class="absolute inset-0 opacity-75">
+            <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
         </div>
 
         <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-poppins">
+                <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-blue-600 transition-colors">
                     {{ $treatment['title'] }}
                 </h1>
-                <div class="flex items-center justify-center gap-2 text-gray-600 font-poppins">
-                    <a href="/" class="hover:text-blue-600 transition-colors">Home</a>
+                <div class="flex items-center justify-center gap-2 text-gray-900 font-poppins hover:text-blue-600 transition-colors">
+                    <a href="/" class="hover:text-gray-900 transition-colors">Home</a>
                     <span>/</span>
                     <a href="{{ route('perawatan.index') }}" class="hover:text-blue-600 transition-colors">Perawatan</a>
                     <span>/</span>
-                    <span class="text-gray-900 font-medium">{{ $treatment['title'] }}</span>
+                    <span class="text-gray-900 font-medium hover:text-blue-600 transition-colors">{{ $treatment['title'] }} </span>
                 </div>
             </div>
         </div>
