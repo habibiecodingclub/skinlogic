@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TreatmentController;
+use App\Http\Controllers\ProductController;
 
 // 1. Route Home (WAJIB ADA ->name('home'))
 Route::get("/", function () {
@@ -24,3 +25,7 @@ Route::get("/perawatan", function () {
 Route::get("/perawatan/{slug}", [TreatmentController::class, "show"])->name(
     "perawatan.show",
 );
+
+// Perhatikan bagian 'index' dan 'show' harus sesuai dengan nama function di Controller
+Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
+Route::get('/produk/{slug}', [ProductController::class, 'show'])->name('produk.show');

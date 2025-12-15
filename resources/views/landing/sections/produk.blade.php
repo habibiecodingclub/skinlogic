@@ -30,10 +30,16 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @foreach($products as $product)
                 @include('landing.components.product-card', [
-                    'image' => $product['image'],
-                    'name' => $product['name'],
-                    'category' => $product['category'],
-                    'price' => $product['price'],
+                    {{-- 1. Gunakan asset() agar gambar tidak broken --}}
+                    'image' => asset('images/' . ($product['image'] ?? 'default.jpg')),
+                    
+                    'name' => $product['name'] ?? 'Nama Produk',
+                    'category' => $product['category'] ?? 'Umum',
+                    'price' => $product['price'] ?? 0,
+                    
+                    {{-- 2. INI FIX ERRORNYA: Gunakan '??' (Null Coalescing Operator) --}}
+                    {{-- Jika key 'slug' tidak ada, pakai 'demo-produk' agar tidak error --}}
+                    'slug' => $product['slug'] ?? 'demo-produk' 
                 ])
             @endforeach
         </div>
