@@ -26,6 +26,13 @@ Route::get("/perawatan/{slug}", [TreatmentController::class, "show"])->name(
     "perawatan.show",
 );
 
-// Perhatikan bagian 'index' dan 'show' harus sesuai dengan nama function di Controller
-Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
-Route::get('/produk/{slug}', [ProductController::class, 'show'])->name('produk.show');
+Route::get("/produk", [ProductController::class, "index"])->name(
+    "produk.index",
+);
+Route::get("/produk/{slug}", [ProductController::class, "show"])->name(
+    "produk.show",
+);
+
+Route::get("/tentang-kami", function () {
+    return view("landing.pages.tentang-kami");
+})->name("tentang-kami");

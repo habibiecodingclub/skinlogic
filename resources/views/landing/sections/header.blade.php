@@ -38,7 +38,7 @@
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
                 </a>
 
-                <a href="#tentang"
+                <a href="{{ route('tentang-kami') }}"
                    class="text-white hover:text-blue-300 font-medium transition-colors duration-200 relative group font-poppins">
                     Tentang Kami
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
@@ -98,7 +98,7 @@
                     Perawatan
                 </a>
 
-                <a href="#tentang"
+                <a href="{{ route('tentang-kami') }}"
                    class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
                     Tentang Kami
                 </a>
