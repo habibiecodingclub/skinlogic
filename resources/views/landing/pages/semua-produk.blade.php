@@ -4,28 +4,22 @@
 @section('content')
     @include('landing.sections.header')
 
-    {{-- 1. HERO SECTION (Gaya Premium seperti Halaman Perawatan) --}}
-    <section class="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 pt-32 pb-20 -mt-6 overflow-hidden">
-        {{-- Background Pattern/Image (Opsional) --}}
-        <div class="absolute inset-0 opacity-50 pointer-events-none">
-            {{-- Kalau punya gambar hero khusus produk, ganti url di bawah --}}
-            <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover; background-position: center;"></div>
+    {{-- Hero Section Perawatan --}}
+    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-48 -mt-6">
+        <div class="absolute inset-0 opacity-75">
+            <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10 text-center">
-            <span class="text-pink-500 font-bold tracking-widest uppercase text-sm mb-2 block animate-fade-in-up">Skinlogic Collection</span>
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-poppins leading-tight">
-                Koleksi Produk Eksklusif
-            </h1>
-            <p class="text-gray-600 max-w-2xl mx-auto text-lg mb-6 font-light">
-                Temukan rangkaian perawatan kulit terbaik yang diformulasikan khusus untuk kebutuhan kulit Anda.
-            </p>
-
-            {{-- Breadcrumbs --}}
-            <div class="flex items-center justify-center gap-2 text-sm font-medium text-gray-500">
-                <a href="/" class="hover:text-pink-500 transition-colors">Home</a>
-                <span>/</span>
-                <span class="text-pink-500">Shop</span>
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-white transition-colors">
+                    Produk
+                </h1>
+                <div class="flex items-center justify-center gap-2 text-gray-900">
+                    <a href="/" class="hover:text-white transition-colors">Home</a>
+                    <span>/</span>
+                    <span class="text-gray-900 font-regular font-poppins hover:text-white transition-colors">Produk</span>
+                </div>
             </div>
         </div>
     </section>
