@@ -57,6 +57,8 @@
                 <a href="{{ route('home') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Home</a>
                 <a href="{{ route('produk.index') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Produk</a>
                 <a href="{{ route('perawatan.index') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Perawatan</a>
+                <a href="{{ route('tentang-kami') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Tentang Kami</a>
+                <a href="#artikel" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Artikel</a>
                 <a href="#reservasi" @click="reservationModal = true; mobileMenuOpen = false" class="bg-white text-[#001a4d] px-4 py-3 rounded-lg font-semibold font-poppins text-center mt-2">Reservasi Sekarang</a>
             </div>
         </nav>
