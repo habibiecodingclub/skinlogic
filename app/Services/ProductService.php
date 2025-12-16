@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 
 class ProductService
 {
+    // HANYA BOLEH STRING BIASA, JANGAN PAKAI asset() DI SINI
     private array $products = [
         [
             'id' => 1,
@@ -13,7 +14,7 @@ class ProductService
             'name' => 'Glow Revitalizing Serum',
             'category' => 'Serum',
             'price' => 150000,
-            'image' => 'serum.jpg', // Pastikan file ini ada di public/images/
+            'image' => 'produk1.jpeg', // Cukup nama file saja
             'description' => 'Serum wajah dengan ekstrak vitamin C murni untuk mencerahkan kulit kusam dan memudarkan noda hitam dalam 14 hari.',
             'benefits' => ['Mencerahkan Wajah', 'Anti-aging', 'Menghilangkan Bekas Jerawat']
         ],
@@ -23,7 +24,7 @@ class ProductService
             'name' => 'Daily Hydrating Toner',
             'category' => 'Toner',
             'price' => 85000,
-            'image' => 'toner.jpg',
+            'image' => 'produk2.jpeg', // Cukup nama file saja
             'description' => 'Toner ringan bebas alkohol yang menyeimbangkan pH kulit dan memberikan kesegaran instan setelah mencuci muka.',
             'benefits' => ['Menyeimbangkan pH', 'Menyegarkan', 'Melembabkan']
         ],
@@ -33,7 +34,7 @@ class ProductService
             'name' => 'Night Repair Cream',
             'category' => 'Cream',
             'price' => 120000,
-            'image' => 'cream.jpg',
+            'image' => 'produk3.jpeg', // Cukup nama file saja
             'description' => 'Krim malam intensif yang bekerja memperbaiki skin barrier yang rusak saat kamu tidur.',
             'benefits' => ['Memperbaiki Skin Barrier', 'Nutrisi Malam', 'Kulit Kenyal']
         ],
@@ -43,7 +44,7 @@ class ProductService
             'name' => 'UV Shield Sunscreen',
             'category' => 'Protection',
             'price' => 95000,
-            'image' => 'sunscreen.jpg',
+            'image' => 'produk4.jpeg', // Cukup nama file saja
             'description' => 'Perlindungan maksimal SPF 50 PA++++ tanpa whitecast, cocok untuk semua jenis kulit.',
             'benefits' => ['SPF 50 PA++++', 'Tanpa Whitecast', 'Ringan']
         ],
