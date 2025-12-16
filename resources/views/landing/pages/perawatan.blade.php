@@ -95,7 +95,7 @@
                                         'category' => 'Facial',
                                         'description' => 'Mengurangi tanda-tanda penuaan seperti garis halus dan kerutan untuk kulit lebih muda',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-anti-aging'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -105,7 +105,7 @@
                                         'category' => 'Facial',
                                         'description' => 'Memberikan kelembaban intensif untuk kulit kering dan dehidrasi dengan serum khusus',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-hydrating'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -115,7 +115,7 @@
                                         'category' => 'Facial',
                                         'description' => 'Perawatan untuk mendapatkan kulit glowing dan sehat dengan hasil instan',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-glow'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -125,7 +125,7 @@
                                         'category' => 'Facial',
                                         'description' => 'Membersihkan racun dan kotoran dalam kulit untuk wajah lebih segar dan bersih',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-detox'])
                                     ])
                                 </div>
                             </div>
@@ -162,7 +162,7 @@
                                         'category' => 'Laser',
                                         'description' => 'Menghilangkan bulu secara permanen dengan teknologi laser yang aman dan nyaman',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-hair-removal'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -172,7 +172,7 @@
                                         'category' => 'Laser',
                                         'description' => 'Mengangkat sel kulit mati dan mencerahkan kulit dengan teknologi laser carbon',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-carbon-peel'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -182,7 +182,7 @@
                                         'category' => 'Laser',
                                         'description' => 'Menghilangkan tato dengan aman menggunakan teknologi laser Q-Switch',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-tattoo-removal'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -192,7 +192,7 @@
                                         'category' => 'Laser',
                                         'description' => 'Meremajakan kulit dan mengurangi tanda penuaan dengan laser fraksional',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-rejuvenation'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -202,7 +202,7 @@
                                         'category' => 'Laser',
                                         'description' => 'Mengatasi bekas jerawat dan lubang bekas jerawat dengan laser resurfacing',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-acne-scar'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -212,7 +212,7 @@
                                         'category' => 'Laser',
                                         'description' => 'Menghilangkan flek hitam dan hiperpigmentasi dengan laser targeting',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-pigmentation'])
                                     ])
                                 </div>
                             </div>
@@ -249,7 +249,7 @@
                                         'category' => 'Body Spa',
                                         'description' => 'Program pelangsingan tubuh dengan teknologi canggih untuk hasil optimal',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-slimming'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -259,7 +259,7 @@
                                         'category' => 'Body Spa',
                                         'description' => 'Mencerahkan kulit tubuh secara menyeluruh untuk tampilan lebih cerah',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-whitening'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -269,7 +269,7 @@
                                         'category' => 'Body Spa',
                                         'description' => 'Pijat relaksasi untuk menghilangkan stress dan ketegangan otot',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-massage'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -279,7 +279,7 @@
                                         'category' => 'Body Spa',
                                         'description' => 'Mengangkat sel kulit mati untuk kulit tubuh lebih halus dan cerah',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-scrub'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -289,7 +289,7 @@
                                         'category' => 'Body Spa',
                                         'description' => 'Mengeluarkan racun dari tubuh untuk kesehatan dan kecantikan optimal',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-detox'])
                                     ])
                                 </div>
                                 <div class="swiper-slide">
@@ -299,7 +299,7 @@
                                         'category' => 'Body Spa',
                                         'description' => 'Mengencangkan kulit tubuh yang kendur dengan treatment khusus',
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => '#'
+                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-firming'])
                                     ])
                                 </div>
                             </div>
