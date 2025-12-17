@@ -1,41 +1,46 @@
-@props(['image', 'name', 'category', 'price', 'slug'])
-
-<div class="group relative flex flex-col gap-3">
-    {{-- 1. Bagian Gambar & Tombol Cart --}}
-    <div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-gray-100 border border-gray-100">
+{{-- resources/views/landing/components/product-card.blade.php --}}
+<a href="{{ route('produk.show', $slug) }}" class="group block h-full">
+    <div class="relative flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-pink-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         
-        {{-- Link ke Detail Produk --}}
-        <a href="{{ route('produk.show', $slug) }}" class="block w-full h-full">
-            <img src="{{ $image }}"
+        {{-- 1. Bagian Gambar --}}
+        <div class="relative w-full aspect-[4/3] overflow-hidden bg-gray-50">
+            {{-- Gambar dengan efek Zoom saat Hover --}}
+            <img src="{{ $image }}" 
                  alt="{{ $name }}" 
-                 class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
-        </a>
-        
-        {{-- Tombol Cart --}}
-        <button class="absolute bottom-3 right-3 bg-slate-900 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300 z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-        </button>
-    </div>
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            
+            {{-- Overlay halus saat hover (biar teks lebih kontras kalau nanti ada overlay text) --}}
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+        </div>
 
-    {{-- 2. Bagian Teks --}}
-    <div class="flex flex-col px-1">
-        {{-- Nama Produk (Link ke Detail) --}}
-        <a href="{{ route('produk.show', $slug) }}">
-            <h3 class="text-lg font-bold font-poppins text-slate-900 mb-0.5 group-hover:text-blue-600 transition-colors">
+        {{-- 2. Bagian Konten --}}
+        <div class="p-5 flex flex-col flex-grow">
+            {{-- Kategori --}}
+            <p class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-2">
+                {{ $category }}
+            </p>
+            
+            {{-- Nama Produk --}}
+            <h3 class="text-lg font-bold text-slate-900 font-poppins mb-2 line-clamp-2 group-hover:text-pink-600 transition-colors">
                 {{ $name }}
             </h3>
-        </a>
-        
-        <p class="text-xs font-semibold font-poppins text-gray-400 uppercase tracking-wide mb-2">
-            {{ $category }}
-        </p>
-        
-        <p class="text-base font-bold font-poppins text-yellow-600">
-            Rp {{ number_format($price, 0, ',', '.') }}
-        </p>
+            
+            {{-- Harga --}}
+            <p class="text-lg font-bold text-slate-900 mt-auto">
+                Rp {{ number_format($price, 0, ',', '.') }}
+            </p>
+
+            {{-- 3. Tombol Detail (Baru) --}}
+            <div class="mt-5 pt-4 border-t border-dashed border-gray-200">
+                <div class="flex items-center justify-between text-slate-600 group-hover:text-pink-600 transition-colors">
+                    <span class="text-sm font-semibold font-poppins">Lihat Detail</span>
+                    <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-all duration-300">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</a>
