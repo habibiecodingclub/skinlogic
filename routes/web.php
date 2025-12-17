@@ -43,3 +43,4 @@ Route::get('/artikel', [ArticleController::class, 'index'])->name('artikel.index
 Route::get('/artikel/kategori/{slug}', [ArticleController::class, 'category'])->name('artikel.category');
 Route::get('/artikel/tag/{slug}', [ArticleController::class, 'tag'])->name('artikel.tag');
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('artikel.show');
+
