@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use FilamentTiptapEditor\TiptapEditor; // Import ini
+use FilamentTiptapEditor\TiptapEditor;
 
 class ArticleResource extends Resource
 {
@@ -170,7 +170,13 @@ class ArticleResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('featured_image')
                     ->label('Gambar')
-                    ->circular(),
+                    ->circular()
+                    ->getStateUsing(fn ($record) =>
+                        $record->featured_image
+                            ? asset('storage/' . $record->featured_image)
+                            : null
+                    ),
+
 
                 Tables\Columns\TextColumn::make('title')
                     ->label('Judul')
