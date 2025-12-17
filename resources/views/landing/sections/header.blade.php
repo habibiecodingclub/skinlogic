@@ -83,38 +83,12 @@
              class="lg:hidden py-4 border-t border-white/10">
 
             <div class="flex flex-col gap-2">
-                <a href="{{ route('home') }}"
-                   class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
-                    Home
-                </a>
-
-                <a href="{{ route('produk.index') }}"
-                   class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
-                    Produk
-                </a>
-
-                <a href="{{ route('perawatan.index') }}"
-                   class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
-                    Perawatan
-                </a>
-
-                <a href="#tentang"
-                   class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
-                    Tentang Kami
-                </a>
-
-                <a href="#artikel"
-                   class="text-white hover:bg-white/10 px-4 py-3 rounded-lg transition-colors duration-200 font-poppins">
-                    Artikel
-                </a>
-
-                <a href="#reservasi"
-                   class="flex items-center justify-center gap-2 bg-white text-[#001a4d] px-4 py-3 rounded-lg font-semibold mt-2 hover:bg-blue-50 transition-colors duration-200 font-poppins">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
-                    Reservasi Sekarang
-                </a>
+                <a href="{{ route('home') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Home</a>
+                <a href="{{ route('produk.index') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Produk</a>
+                <a href="{{ route('perawatan.index') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Perawatan</a>
+                <a href="{{ route('tentang-kami') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Tentang Kami</a>
+                <a href="{{ route('artikel.index') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Artikel</a>
+                <a href="#reservasi" @click="reservationModal = true; mobileMenuOpen = false" class="bg-white text-[#001a4d] px-4 py-3 rounded-lg font-semibold font-poppins text-center mt-2">Reservasi Sekarang</a>
             </div>
         </nav>
     </div>
