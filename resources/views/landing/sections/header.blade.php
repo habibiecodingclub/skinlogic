@@ -8,7 +8,7 @@
             waName: '',                 // Data form WA
             waDate: ''                  // Data form WA
         }"
-        x-init="window.addEventListener('scroll', () => { scrolled = window.pageYOffset > 10 })"
+        x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
         :class="scrolled ? 'bg-[#001a4d] shadow-lg py-0' : 'bg-[#001a4d]'"
         class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
 
