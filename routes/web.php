@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ArticleController;
 
 // 1. Route Home (WAJIB ADA ->name('home'))
 Route::get("/", function () {
@@ -26,6 +27,11 @@ Route::get("/perawatan/{slug}", [TreatmentController::class, "show"])->name(
     "perawatan.show",
 );
 
+<<<<<<< Updated upstream
+// Perhatikan bagian 'index' dan 'show' harus sesuai dengan nama function di Controller
+Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
+Route::get('/produk/{slug}', [ProductController::class, 'show'])->name('produk.show');
+=======
 Route::get("/produk", [ProductController::class, "index"])->name(
     "produk.index",
 );
@@ -36,3 +42,10 @@ Route::get("/produk/{slug}", [ProductController::class, "show"])->name(
 Route::get("/tentang-kami", function () {
     return view("landing.pages.tentang-kami");
 })->name("tentang-kami");
+
+// Artikel routes
+Route::get('/artikel', [ArticleController::class, 'index'])->name('artikel.index');
+Route::get('/artikel/kategori/{slug}', [ArticleController::class, 'category'])->name('artikel.category');
+Route::get('/artikel/tag/{slug}', [ArticleController::class, 'tag'])->name('artikel.tag');
+Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('artikel.show');
+>>>>>>> Stashed changes
