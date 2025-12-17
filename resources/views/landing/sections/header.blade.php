@@ -9,7 +9,7 @@
             waDate: ''                  // Data form WA
         }"
         x-init="window.addEventListener('scroll', () => { scrolled = window.pageYOffset > 10 })"
-        :class="scrolled ? 'bg-[#001a4d]/85 backdrop-blur-md shadow-lg' : 'bg-[#001a4d]'"
+        :class="scrolled ? 'bg-[#001a4d] shadow-lg py-0' : 'bg-[#001a4d]'"
         class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,7 +32,7 @@
                 <a href="{{ route('produk.index') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Produk</a>
                 <a href="{{ route('perawatan.index') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Perawatan</a>
                 <a href="{{ route('tentang-kami') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Tentang Kami</a>
-                <a href="#artikel" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Artikel</a>
+                <a href="{{ route('artikel.index') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Artikel</a>
 
                 {{-- TOMBOL RESERVASI --}}
                 <button @click="reservationModal = true"
