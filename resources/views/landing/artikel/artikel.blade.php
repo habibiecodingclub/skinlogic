@@ -41,34 +41,49 @@
                     <h2 class="text-2xl font-bold text-gray-900 mb-6 font-poppins">Artikel Terbaru</h2>
                     <div class="grid md:grid-cols-3 gap-6">
                         @foreach($featuredArticles as $featured)
-                        <a href="{{ route('artikel.show', $featured->slug) }}" class="group">
-                            <div class="relative h-48 rounded-xl overflow-hidden mb-4">
+                        <div class="group relative flex flex-col gap-3 h-full">
+                            {{-- Bagian Gambar & Tombol Aksi --}}
+                            <div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-gray-100 border border-gray-100">
                                 @if($featured->featured_image)
                                     <img src="{{ Storage::url($featured->featured_image) }}" 
                                          alt="{{ $featured->image_alt ?? $featured->title }}"
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                         class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5"></div>
                                 @endif
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                                <a href="{{ route('artikel.show', $featured->slug) }}" 
+                                   class="absolute bottom-3 right-3 bg-slate-900 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300 z-10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+
+                            <div class="flex flex-col px-1 flex-grow">
                                 @if($featured->category)
-                                <span class="absolute top-4 left-4 px-3 py-1 bg-primary text-white text-xs font-medium rounded-full">
+                                <span class="text-xs font-extrabold font-poppins text-yellow-600 uppercase tracking-widest mb-2">
                                     {{ $featured->category->name }}
                                 </span>
                                 @endif
+
+                                <a href="{{ route('artikel.show', $featured->slug) }}">
+                                    <h3 class="text-lg font-bold font-poppins text-slate-900 mb-3 leading-snug group-hover:text-blue-600 transition-colors">
+                                        {{ $featured->title }}
+                                    </h3>
+                                </a>
+                                
+                                <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-3">
+                                    {{ $featured->excerpt }}
+                                </p>
+
+                                <div class="flex items-center text-xs text-gray-400 gap-3 mt-auto">
+                                    <span>{{ $featured->published_at->format('d M Y') }}</span>
+                                    <span>•</span>
+                                    <span>{{ $featured->reading_time }} min read</span>
+                                </div>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 mb-2">
-                                {{ $featured->title }}
-                            </h3>
-                            <p class="text-sm text-gray-600 line-clamp-2 mb-3">
-                                {{ $featured->excerpt }}
-                            </p>
-                            <div class="flex items-center text-xs text-gray-500 gap-3">
-                                <span>{{ $featured->published_at->format('d M Y') }}</span>
-                                <span>•</span>
-                                <span>{{ $featured->reading_time }} min read</span>
-                            </div>
-                        </a>
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -120,49 +135,53 @@
             {{-- Articles Grid --}}
             <div class="lg:col-span-3 order-1 lg:order-2">
                 @if($articles->count() > 0)
-                <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8 mb-8">
                     @foreach($articles as $article)
-                    <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                        {{-- Image --}}
-                        <a href="{{ route('artikel.show', $article->slug) }}" class="relative h-48 overflow-hidden group">
+                    <div class="group relative flex flex-col gap-3 h-full">
+                        {{-- Bagian Gambar & Tombol Aksi --}}
+                        <div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-gray-100 border border-gray-100">
                             @if($article->featured_image)
                                 <img src="{{ Storage::url($article->featured_image) }}" 
                                      alt="{{ $article->image_alt ?? $article->title }}"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                     class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.onerror=null; this.src='{{ asset('images/placeholder.jpg') }}'; console.log('Image failed to load: {{ Storage::url($article->featured_image) }}');">
                             @else
-                                <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5"></div>
+                                <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                                    <span class="text-gray-400 text-sm">No Image</span>
+                                </div>
                             @endif
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                            <a href="{{ route('artikel.show', $article->slug) }}" 
+                               class="absolute bottom-3 right-3 bg-slate-900 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300 z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+
+                        <div class="flex flex-col px-1 flex-grow">
                             @if($article->category)
-                            <span class="absolute top-4 left-4 px-3 py-1 bg-primary text-white text-xs font-medium rounded-full">
+                            <span class="text-xs font-extrabold font-poppins text-yellow-600 uppercase tracking-widest mb-2">
                                 {{ $article->category->name }}
                             </span>
                             @endif
-                        </a>
 
-                        {{-- Content --}}
-                        <div class="p-6 flex-1 flex flex-col">
                             <a href="{{ route('artikel.show', $article->slug) }}">
-                                <h3 class="text-xl font-bold text-gray-900 hover:text-primary transition-colors line-clamp-2 mb-3">
+                                <h3 class="text-lg font-bold font-poppins text-slate-900 mb-3 leading-snug group-hover:text-blue-600 transition-colors">
                                     {{ $article->title }}
                                 </h3>
                             </a>
                             
-                            <p class="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">
+                            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-3">
                                 {{ $article->excerpt }}
                             </p>
 
                             {{-- Meta --}}
-                            <div class="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    <span>{{ $article->published_at->format('d M Y') }}</span>
-                                </div>
+                            <div class="flex items-center justify-between text-xs text-gray-400 mt-auto pt-2">
+                                <span>{{ $article->published_at->format('d M Y') }}</span>
                                 <div class="flex items-center gap-3">
                                     <div class="flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
@@ -172,7 +191,7 @@
                                 </div>
                             </div>
                         </div>
-                    </article>
+                    </div>
                     @endforeach
                 </div>
 
