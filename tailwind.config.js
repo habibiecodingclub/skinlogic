@@ -22,7 +22,7 @@ export default {
     theme: {
         extend: {
             colors: {
-                skinlogic: "#1A2636", // contoh warna utama
+                skinlogic: "#001a4d", // contoh warna utama
                 "skinlogic-accent": "#FBBF24", // contoh warna aksen
             },
             fontFamily: {

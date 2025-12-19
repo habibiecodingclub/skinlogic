@@ -1,9 +1,9 @@
 <div x-data="{ hovered: false }"
      @mouseenter="hovered = true"
      @mouseleave="hovered = false"
-     class="bg-white border border-gray-200 rounded-lg transition-all duration-300 hover:shadow-2xl relative h-full min-h-[560px] flex flex-col overflow-hidden">
+     class="bg-white rounded-lg border border-blue-950 transition-all duration-300 hover:shadow-2xl relative h-full min-h-[560px] flex flex-col overflow-hidden">
 
-    <!-- Hover blue border arham coba deh okeoke-->
+    <!-- Hover blue border-->
     <div class="absolute inset-0 border-[3px] rounded-lg transition-all duration-500 pointer-events-none border-blue-600 z-30"
          :class="hovered ? 'opacity-100' : 'opacity-0'"></div>
 
@@ -19,7 +19,7 @@
     <div class="relative z-20 p-8 flex flex-col h-full">
         <!-- Gambar bulat -->
         <div class="relative flex justify-center mb-6">
-            <div class="w-40 h-40 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-gray-100 z-20 transition-all duration-300 bg-white/90 backdrop-blur-sm"
+            <div class="w-40 h-40 md:w-44 md:h-44 rounded-full overflow-hidden z-20 transition-all duration-300 bg-white/90 backdrop-blur-sm"
                  :class="hovered ? 'scale-110 border-blue-100 shadow-2xl' : 'scale-100'">
                 <img src="{{ $image }}" alt="{{ $title }}"
                      class="w-full h-full object-cover transition-transform duration-500"

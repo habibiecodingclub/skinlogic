@@ -1,46 +1,95 @@
-<footer id="footer" class="bg-gray-900 text-gray-300 py-12">
-    <div class="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-3 gap-8">
+<footer id="footer" class="bg-skinlogic text-gray-200">
+    {{-- Top Divider --}}
+    <div class="h-1 bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900"></div>
 
-        <!-- Logo & Deskripsi -->
-        <div>
-            <h3 class="text-xl font-bold text-white mb-4">SkinLogic</h3>
-            <p class="text-sm">
-                Klinik perawatan kulit terpercaya dengan layanan profesional dan teknologi modern.
-            </p>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-14 grid gap-10 md:grid-cols-3">
+
+        <!-- Brand -->
+    <div>
+        <div class="flex items-center gap-3 mb-4">
+            <!-- Logo -->
+            <img
+                src="{{ asset('images/brandSL.png') }}"
+                alt="SkinLogic Logo"
+                class="w-10 h-10 object-contain"
+            />
+
+            <!-- Brand Text -->
+            <h3 class="text-2xl font-bold text-white tracking-wide font-poppins leading-none">
+                SkinLogic</span>
+            </h3>
         </div>
 
-        <!-- Navigasi Cepat -->
+        <p class="text-sm leading-relaxed text-white-400 max-w-sm">
+            Klinik perawatan kulit terpercaya dengan pendekatan medis, teknologi modern,
+            dan tenaga profesional berpengalaman.
+        </p>
+    </div>
+
+        <!-- Navigasi -->
         <div>
-            <h4 class="text-lg font-semibold text-white mb-4">Navigasi</h4>
-            <ul class="space-y-2 text-sm">
-                <li><a href="#home" class="hover:text-skinlogic">Home</a></li>
-                <li><a href="#kenapa" class="hover:text-skinlogic">Kenapa SkinLogic</a></li>
-                <li><a href="#offerings" class="hover:text-skinlogic">Layanan</a></li>
-                <li><a href="#promo" class="hover:text-skinlogic">Promo</a></li>
-                <li><a href="#testimonials" class="hover:text-skinlogic">Testimoni</a></li>
-                <li><a href="#kunjungi" class="hover:text-skinlogic">Kunjungi Klinik</a></li>
-                <li><a href="#artikel" class="hover:text-skinlogic">Artikel</a></li>
+            <h4 class="text-lg font-semibold text-white mb-5 border-l-4 border-skinlogic-accent pl-3">
+                Navigasi
+            </h4>
+            <ul class="space-y-3 text-sm">
+                @foreach ([
+                    '#home' => 'Home',
+                    '#kenapa' => 'Kenapa SkinLogic',
+                    '#offerings' => 'Layanan',
+                    '#promo' => 'Promo',
+                    '#testimonials' => 'Testimoni',
+                    '#kunjungi' => 'Kunjungi Klinik',
+                    '#artikel' => 'Artikel'
+                ] as $link => $label)
+                    <li>
+                        <a href="{{ $link }}"
+                           class="group flex items-center gap-2 text-gray-300 hover:text-white transition">
+                            <span class="h-1.5 w-1.5 rounded-full bg-skinlogic-accent opacity-0 group-hover:opacity-100 transition"></span>
+                            {{ $label }}
+                        </a>
+                    </li>
+                @endforeach
             </ul>
         </div>
 
         <!-- Kontak -->
         <div>
-            <h4 class="text-lg font-semibold text-white mb-4">Kontak</h4>
-            <ul class="space-y-2 text-sm">
-                <li>📍 Jl. Perawatan No. 123, Makassar</li>
-                <li>📞 0812-3456-7890</li>
-                <li>✉️ info@skinlogic.com</li>
+            <h4 class="text-lg font-semibold text-white mb-5 border-l-4 border-skinlogic-accent pl-3">
+                Kontak
+            </h4>
+            <ul class="space-y-3 text-sm text-gray-300">
+                <li class="flex gap-2">
+                    <span>📍</span>
+                    <span>Jl. Perawatan No. 123, Makassar</span>
+                </li>
+                <li class="flex gap-2">
+                    <span>📞</span>
+                    <span>0812-3456-7890</span>
+                </li>
+                <li class="flex gap-2">
+                    <span>✉️</span>
+                    <span>info@skinlogic.com</span>
+                </li>
             </ul>
-            <div class="flex space-x-4 mt-4">
-                <a href="#" class="hover:text-skinlogic">🌐 Facebook</a>
-                <a href="#" class="hover:text-skinlogic">📸 Instagram</a>
-                <a href="#" class="hover:text-skinlogic">🐦 Twitter</a>
+
+            <!-- Social -->
+            <div class="flex gap-4 mt-6">
+                <a href="#" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-skinlogic-accent text-white transition">
+                    🌐
+                </a>
+                <a href="#" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-skinlogic-accent text-white transition">
+                    📸
+                </a>
+                <a href="#" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-skinlogic-accent text-white transition">
+                    🐦
+                </a>
             </div>
         </div>
+
     </div>
 
-    <!-- Copyright -->
-    <div class="mt-12 border-t border-gray-700 pt-6 text-center text-sm text-gray-400">
-        © {{ date('Y') }} SkinLogic. All rights reserved.
+    <!-- Bottom -->
+    <div class="border-t border-white/10 py-6 text-center text-sm text-gray-400">
+        © {{ date('Y') }} <span class="text-white font-medium">SkinLogic</span>. All rights reserved.
     </div>
 </footer>
