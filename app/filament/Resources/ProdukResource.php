@@ -230,6 +230,11 @@ class ProdukResource extends Resource
                     '1' => 'Produk Bundling',
                 ]),
         ])
+        // ->headerActions([
+                // ExportAction::make()->exports([
+                //     ExcelExport::make()->fromTable()
+                // ])->label('Download')
+            // ])
         ->actions([
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),

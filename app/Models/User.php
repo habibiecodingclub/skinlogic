@@ -52,4 +52,13 @@ class User extends Authenticatable
     return $this->hasAnyRole(['admin', 'manajer', 'kasir']);
 }
 
+
+// Tambahkan method ke model User (App\Models\User.php)
+public function isTerapis(): bool
+{
+    return $this->hasRole('terapis') || $this->hasAnyRole(['admin', 'manajer']);
+}
+
+
+
 }

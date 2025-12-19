@@ -13,6 +13,7 @@ class Pesanan extends Model
 
     protected $guarded = [];
 
+    // Tambahkan relasi
     public function pelanggan(): BelongsTo
     {
         return $this->belongsTo(Pelanggan::class, 'pelanggan_id');

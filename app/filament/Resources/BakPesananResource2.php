@@ -8,9 +8,7 @@ use App\Models\Pesanan;
 use App\Models\Produk;
 use App\Models\Perawatan;
 use App\Models\Pelanggan;
-use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -31,7 +29,7 @@ use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 
-class PesananResource extends Resource
+class BakPesananResource2 extends Resource
 {
     protected static ?string $model = Pesanan::class;
 
@@ -388,66 +386,12 @@ class PesananResource extends Resource
                     ]),
             ])
             ->headerActions([
-    // **UPDATE EXPORT ACTION DENGAN DATE PICKER LANGSUNG**
-    ExportAction::make()
-        ->label('Download Excel')
-        ->color('success')
-        ->icon('heroicon-o-arrow-down-tray')
-        ->form([
-            DatePicker::make('dari_tanggal')
-                ->label('Dari Tanggal')
-                ->required()
-                ->default(now()->startOfMonth()) // Default awal bulan
-                ->maxDate(now()),
-
-            DatePicker::make('sampai_tanggal')
-                ->label('Sampai Tanggal')
-                ->required()
-                ->default(now()) // Default hari ini
-                ->maxDate(now())
-                ->after('dari_tanggal'), // Validasi: harus setelah dari_tanggal
-        ])
-        ->action(function (array $data) {
-            $dariTanggal = Carbon::parse($data['dari_tanggal'])->startOfDay();
-            $sampaiTanggal = Carbon::parse($data['sampai_tanggal'])->endOfDay();
-
-            // Validasi tanggal
-            if ($dariTanggal->gt($sampaiTanggal)) {
-                Notification::make()
-                    ->title('Error')
-                    ->body('Tanggal "Dari" tidak boleh lebih besar dari tanggal "Sampai"')
-                    ->danger()
-                    ->send();
-                return;
-            }
-
-            // Query berdasarkan rentang tanggal
-            $query = Pesanan::whereBetween('created_at', [
-                $dariTanggal,
-                $sampaiTanggal
-            ]);
-
-            // Format nama file
-            $fileName = 'pesanan_' .
-                $dariTanggal->format('Y-m-d') . '_sampai_' .
-                $sampaiTanggal->format('Y-m-d');
-
-            // Load relationships
-            $query->with([
-                'pelanggan',
-                'detailProduk.produk',
-                'detailPerawatan.perawatan'
-            ])->orderBy('created_at', 'asc');
-
-            $export = new PesananCleanExport($query);
-
-            return Excel::download($export, $fileName . '.xlsx');
-        })
-        ->modalHeading('Download Data Pesanan')
-        ->modalDescription('Pilih rentang tanggal untuk data yang akan didownload:')
-        ->modalSubmitActionLabel('Download Excel')
-        ->modalWidth('md'),
-])
+                ExportAction::make()
+    ->label('Download Excel')
+    ->action(function () {
+        return Excel::download(new PesananCleanExport, 'pesanan_clean_' . date('Y-m-d') . '.xlsx');
+    })
+            ])
             ->actions([
                 Action::make('view')
                     ->label('Detail')

@@ -6,23 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PesananProduk extends Model
+class ReservationPerawatan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pesanan_produk';
+    protected $table = 'reservation_perawatan';
 
     protected $guarded = [];
 
-
-    public function produk(): BelongsTo
+    public function reservation(): BelongsTo
     {
-        return $this->belongsTo(Produk::class, 'produk_id');
+        return $this->belongsTo(Reservation::class, 'reservation_id');
     }
 
-    public function pesanan(): BelongsTo
+    public function perawatan(): BelongsTo
     {
-        return $this->belongsTo(Pesanan::class, 'pesanan_id');
+        return $this->belongsTo(Perawatan::class, 'perawatan_id');
     }
 
     public function getSubtotalAttribute()
