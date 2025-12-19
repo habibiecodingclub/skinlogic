@@ -1,6 +1,5 @@
 <section id="kenapa" class="py-20 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-6 md:px-12">
-        <!-- Header -->
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold font-poppins mb-4 text-gray-900">
                 KENAPA MEMILIH SKINLOGIC ?
@@ -10,20 +9,20 @@
             </p>
         </div>
 
-        <!-- Content Grid -->
         <div class="grid md:grid-cols-2 gap-12 items-center">
-            <!-- Image Side with Curved Background -->
             <div class="relative" x-data="{ loaded: false }" x-init="setTimeout(() => loaded = true, 100)">
-                <!-- Dark Blue Curved Background -->
-                <div class="absolute inset-0 bg-[#1a2942] rounded-[80px] transform md:-translate-x-8"
+                
+                <div class="absolute inset-0 rounded-[80px] overflow-hidden transform md:-translate-x-8"
                      :class="loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'"
                      x-transition:enter="transition ease-out duration-700"
                      x-transition:enter-start="opacity-0 scale-95"
                      x-transition:enter-end="opacity-100 scale-100"
                      style="z-index: 1;">
+                    <img src="{{ asset('images/produk2.jpeg') }}"
+                         alt="Latar Belakang" 
+                         class="w-full h-full object-cover">
                 </div>
 
-                <!-- Image Container with Circular Mask -->
                 <div class="relative z-10 flex justify-center items-center py-8">
                     <div class="w-80 h-80 md:w-96 md:h-96 rounded-full overflow-hidden shadow-2xl"
                          :class="loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
@@ -37,9 +36,7 @@
                 </div>
             </div>
 
-            <!-- Features Side -->
             <div class="space-y-8" x-data="{ activeIndex: null }">
-                <!-- Feature 1: Berpengalaman -->
                 <div class="flex items-start group cursor-pointer"
                      @mouseenter="activeIndex = 0"
                      @mouseleave="activeIndex = null"
@@ -51,7 +48,6 @@
                          x-transition:enter="transition ease-out duration-500 delay-100"
                          x-transition:enter-start="opacity-0 -translate-x-4"
                          x-transition:enter-end="opacity-100 translate-x-0">
-                        <!-- Lightbulb Icon -->
                         <div class="w-16 h-16 flex items-center justify-center">
                             <svg class="w-12 h-12 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -73,7 +69,6 @@
                     </div>
                 </div>
 
-                <!-- Feature 2: Pelayanan Ramah -->
                 <div class="flex items-start group cursor-pointer"
                      @mouseenter="activeIndex = 1"
                      @mouseleave="activeIndex = null"
@@ -85,7 +80,6 @@
                          x-transition:enter="transition ease-out duration-500 delay-300"
                          x-transition:enter-start="opacity-0 -translate-x-4"
                          x-transition:enter-end="opacity-100 translate-x-0">
-                        <!-- Hand Heart Icon -->
                         <div class="w-16 h-16 flex items-center justify-center">
                             <svg class="w-12 h-12 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -107,7 +101,6 @@
                     </div>
                 </div>
 
-                <!-- Feature 3: Teknologi Terbaru -->
                 <div class="flex items-start group cursor-pointer"
                      @mouseenter="activeIndex = 2"
                      @mouseleave="activeIndex = null"
@@ -119,7 +112,6 @@
                          x-transition:enter="transition ease-out duration-500 delay-500"
                          x-transition:enter-start="opacity-0 -translate-x-4"
                          x-transition:enter-end="opacity-100 translate-x-0">
-                        <!-- Chip/CPU Icon -->
                         <div class="w-16 h-16 flex items-center justify-center">
                             <svg class="w-12 h-12 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
