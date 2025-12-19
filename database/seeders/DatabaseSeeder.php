@@ -44,6 +44,16 @@ class DatabaseSeeder extends Seeder
         ]);
         $kasir->assignRole($kasirRole);
 
+            $terapisRole = Role::firstOrCreate(['name' => 'terapis', 'guard_name' => 'web']);
+
+    // Berikan permission untuk terapis
+    // $terapisRole->givePermissionTo([
+    //     'view reservation',
+    //     'edit reservation',
+    //     'create reservation',
+    // ]);
+
+
         // Data dummy lain
         // Pelanggan::factory()->count(10)->create();
         // Produk::factory()->count(10)->create();

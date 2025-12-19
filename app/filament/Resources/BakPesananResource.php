@@ -2,15 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Exports\PesananCleanExport;
 use App\Filament\Resources\PesananResource\Pages;
 use App\Models\Pesanan;
 use App\Models\Produk;
 use App\Models\Perawatan;
 use App\Models\Pelanggan;
-use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -26,12 +23,11 @@ use Filament\Notifications\Notification;
 use Filament\Forms\Components\Placeholder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 
-class PesananResource extends Resource
+class BakPesananResource extends Resource
 {
     protected static ?string $model = Pesanan::class;
 
@@ -387,67 +383,225 @@ class PesananResource extends Resource
                         'Dibatalkan' => 'Dibatalkan'
                     ]),
             ])
-            ->headerActions([
-    // **UPDATE EXPORT ACTION DENGAN DATE PICKER LANGSUNG**
-    ExportAction::make()
-        ->label('Download Excel')
-        ->color('success')
-        ->icon('heroicon-o-arrow-down-tray')
-        ->form([
-            DatePicker::make('dari_tanggal')
-                ->label('Dari Tanggal')
-                ->required()
-                ->default(now()->startOfMonth()) // Default awal bulan
-                ->maxDate(now()),
+              ->headerActions([
+                ExportAction::make()
+                    ->label('Download Excel')
+                    ->exports([
+                        ExcelExport::make()
+                            // ->fromTable()
+                            ->withFilename('pesanan_skinlogic_' . date('Y-m-d'))
+                            ->withColumns([
+                                // Kolom dasar
+                                Column::make('created_at')
+                                    ->heading('Tanggal Pesanan')
+                                    ->formatStateUsing(fn($state) => $state->format('d M Y')),
+                                Column::make('pelanggan.Nama')
+                                    ->heading('Pelanggan'),
 
-            DatePicker::make('sampai_tanggal')
-                ->label('Sampai Tanggal')
-                ->required()
-                ->default(now()) // Default hari ini
-                ->maxDate(now())
-                ->after('dari_tanggal'), // Validasi: harus setelah dari_tanggal
-        ])
-        ->action(function (array $data) {
-            $dariTanggal = Carbon::parse($data['dari_tanggal'])->startOfDay();
-            $sampaiTanggal = Carbon::parse($data['sampai_tanggal'])->endOfDay();
+                                Column::make('status')
+                                    ->heading('Status Pesanan'),
 
-            // Validasi tanggal
-            if ($dariTanggal->gt($sampaiTanggal)) {
-                Notification::make()
-                    ->title('Error')
-                    ->body('Tanggal "Dari" tidak boleh lebih besar dari tanggal "Sampai"')
-                    ->danger()
-                    ->send();
-                return;
-            }
+                                Column::make('Metode_Pembayaran')
+                                    ->heading('Metode Pembayaran'),
 
-            // Query berdasarkan rentang tanggal
-            $query = Pesanan::whereBetween('created_at', [
-                $dariTanggal,
-                $sampaiTanggal
-            ]);
 
-            // Format nama file
-            $fileName = 'pesanan_' .
-                $dariTanggal->format('Y-m-d') . '_sampai_' .
-                $sampaiTanggal->format('Y-m-d');
 
-            // Load relationships
-            $query->with([
-                'pelanggan',
-                'detailProduk.produk',
-                'detailPerawatan.perawatan'
-            ])->orderBy('created_at', 'asc');
+                                // Kolom untuk produk - TETAP DITAMPILKAN MESKI DIBATALKAN
+                                Column::make('produk_list')
+                                    ->heading('Daftar Produk')
+                                    ->getStateUsing(function ($record) {
+                                        $detailProduk = \App\Models\PesananProduk::with('produk')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
 
-            $export = new PesananCleanExport($query);
+                                        if ($detailProduk->isEmpty()) {
+                                            return '-';
+                                        }
 
-            return Excel::download($export, $fileName . '.xlsx');
-        })
-        ->modalHeading('Download Data Pesanan')
-        ->modalDescription('Pilih rentang tanggal untuk data yang akan didownload:')
-        ->modalSubmitActionLabel('Download Excel')
-        ->modalWidth('md'),
-])
+                                        return $detailProduk->map(function ($item) {
+                                            $produkNama = $item->produk ? $item->produk->Nama : 'Produk tidak ditemukan';
+                                            return "{$produkNama}";
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom Qty Produk - 0 JIKA DIBATALKAN
+                                Column::make('qty_produk')
+                                    ->heading('Qty Produk')
+                                    ->getStateUsing(function ($record) {
+                                        $detailProduk = \App\Models\PesananProduk::with('produk')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailProduk->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailProduk->map(function ($item) use ($record) {
+                                            // Jika status dibatalkan, tampilkan 0
+                                            if ($record->status === 'Dibatalkan') {
+                                                return "0";
+                                            }
+                                            return "{$item->qty}";
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom Harga Satuan Produk - 0 JIKA DIBATALKAN
+                                Column::make('harga_produk')
+                                    ->heading('Harga Satuan Produk')
+                                    ->getStateUsing(function ($record) {
+                                        $detailProduk = \App\Models\PesananProduk::with('produk')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailProduk->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailProduk->map(function ($item) use ($record) {
+                                            // Jika status dibatalkan, tampilkan 0
+                                            if ($record->status === 'Dibatalkan') {
+                                                return "0";
+                                            }
+                                            // Hanya angka saja, tanpa "Rp"
+                                            return number_format($item->harga, 0, '', '');
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom Sub Total Produk - 0 JIKA DIBATALKAN
+                                Column::make('subtotal_produk')
+                                    ->heading('Sub Total Produk')
+                                    ->getStateUsing(function ($record) {
+                                        $detailProduk = \App\Models\PesananProduk::with('produk')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailProduk->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailProduk->map(function ($item) use ($record) {
+                                            // Jika status dibatalkan, tampilkan 0
+                                            if ($record->status === 'Dibatalkan') {
+                                                return "0";
+                                            }
+                                            $subtotal = $item->harga * $item->qty;
+                                            // Hanya angka saja, tanpa "Rp"
+                                            return number_format($subtotal, 0, '', '');
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom untuk perawatan - TETAP DITAMPILKAN MESKI DIBATALKAN
+                                Column::make('perawatan_list')
+                                    ->heading('Daftar Perawatan')
+                                    ->getStateUsing(function ($record) {
+                                        $detailPerawatan = \App\Models\PesananPerawatan::with('perawatan')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailPerawatan->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailPerawatan->map(function ($item) {
+                                            $perawatanNama = $item->perawatan ? $item->perawatan->Nama_Perawatan : 'Perawatan tidak ditemukan';
+                                            return "{$perawatanNama}";
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom Qty Perawatan - 0 JIKA DIBATALKAN
+                                Column::make('qty_perawatan')
+                                    ->heading('Qty Perawatan')
+                                    ->getStateUsing(function ($record) {
+                                        $detailPerawatan = \App\Models\PesananPerawatan::with('perawatan')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailPerawatan->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailPerawatan->map(function ($item) use ($record) {
+                                            // Jika status dibatalkan, tampilkan 0
+                                            if ($record->status === 'Dibatalkan') {
+                                                return "0";
+                                            }
+                                            return "{$item->qty}";
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom Harga Satuan Perawatan - 0 JIKA DIBATALKAN
+                                Column::make('harga_perawatan')
+                                    ->heading('Harga Satuan Perawatan')
+                                    ->getStateUsing(function ($record) {
+                                        $detailPerawatan = \App\Models\PesananPerawatan::with('perawatan')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailPerawatan->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailPerawatan->map(function ($item) use ($record) {
+                                            // Jika status dibatalkan, tampilkan 0
+                                            if ($record->status === 'Dibatalkan') {
+                                                return "0";
+                                            }
+                                            // Hanya angka saja, tanpa "Rp"
+                                            return number_format($item->harga, 0, '', '');
+                                        })->implode("\n");
+                                    }),
+
+                                // Kolom Sub Total Perawatan - 0 JIKA DIBATALKAN
+                                Column::make('subtotal_perawatan')
+                                    ->heading('Sub Total Perawatan')
+                                    ->getStateUsing(function ($record) {
+                                        $detailPerawatan = \App\Models\PesananPerawatan::with('perawatan')
+                                            ->where('pesanan_id', $record->id)
+                                            ->get();
+
+                                        if ($detailPerawatan->isEmpty()) {
+                                            return '-';
+                                        }
+
+                                        return $detailPerawatan->map(function ($item) use ($record) {
+                                            // Jika status dibatalkan, tampilkan 0
+                                            if ($record->status === 'Dibatalkan') {
+                                                return "0";
+                                            }
+                                            $subtotal = $item->harga * $item->qty;
+                                            // Hanya angka saja, tanpa "Rp"
+                                            return number_format($subtotal, 0, '', '');
+                                        })->implode("\n");
+                                    }),
+
+                                // Total keseluruhan - 0 JIKA DIBATALKAN
+                                Column::make('grand_total')
+                                    ->heading('Grand Total')
+                                    ->getStateUsing(function ($record) {
+                                        // Jika status dibatalkan, tampilkan 0
+                                        if ($record->status === 'Dibatalkan') {
+                                            return "0";
+                                        }
+
+                                        $totalProduk = \App\Models\PesananProduk::where('pesanan_id', $record->id)
+                                            ->sum(\DB::raw('harga * qty'));
+
+                                        $totalPerawatan = \App\Models\PesananPerawatan::where('pesanan_id', $record->id)
+                                            ->sum(\DB::raw('harga * qty'));
+
+                                        $total = $totalProduk + $totalPerawatan;
+
+                                        // Hanya angka saja, tanpa "Rp"
+                                        return number_format($total, 0, '', '');
+                                    }),
+                            ])
+                            ->modifyQueryUsing(fn($query) => $query->with([
+                                'pelanggan',
+                                'detailProduk.produk',
+                                'detailPerawatan.perawatan'
+                            ]))
+                    ])
+            ])
             ->actions([
                 Action::make('view')
                     ->label('Detail')
