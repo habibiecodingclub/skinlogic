@@ -155,7 +155,7 @@ curl -X POST "http://localhost:8000/api/reservations" \
       "nama": "John Doe",
       "email": "john@example.com",
       "nomor_telepon": "08123456789",
-      "status": "Non Member"
+      "status": "Non Membera"
     },
     "tanggal_reservasi": "2024-12-20",
     "jam_reservasi": "14:00",
