@@ -9,6 +9,19 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+   // TAMBAHKAN METHOD INI
+public function home()
+{
+    // Ambil 3 artikel terbaru untuk homepage
+    $articles = Article::where('status', 'published')
+        ->where('published_at', '<=', now())
+        ->with(['category', 'author'])
+        ->latest('published_at')
+        ->take(3)
+        ->get();
+    
+    return view('landing.index', compact('articles'));
+}
     // List semua artikel
     public function index(Request $request)
     {

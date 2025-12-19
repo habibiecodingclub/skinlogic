@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-6 md:px-12">
         <!-- Header -->
         <div class="text-center mb-4">
-            <p class="text-sm font-semibold text-gray-600 tracking-wider uppercase mb-2">TREATMENT</p>
+            <p class="text-sm font-semibold font-poppins text-gray-600 tracking-wider uppercase mb-2">TREATMENT</p>
             <h2 class="text-3xl md:text-4xl font-bold font-poppins text-gray-900 mb-8">
                 Apa Yang Kami Tawarkan
             </h2>
@@ -10,7 +10,7 @@
 
         <!-- Link Lihat Semua -->
         <div class="flex justify-end mb-8">
-            <a href="{{ route('perawatan.index') }}" class="text-gray-900 font-semibold hover:text-skinlogic transition-colors duration-300 flex items-center gap-2 group">
+            <a href="{{ route('perawatan.index') }}" class="text-gray-900 font-semibold font-poppins hover:text-skinlogic transition-colors duration-300 flex items-center gap-2 group">
                 LIHAT SEMUA
                 <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>

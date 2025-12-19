@@ -1,22 +1,26 @@
 @php
     $products = [
         [
-            'image' => asset('images/produk1.jpeg'),
+            // HAPUS asset() dan 'images/', cukup nama file saja
+            'image' => 'treatment1.jpeg', 
             'name' => 'Acne Fighter Serum',
             'category' => 'Serum Wajah',
             'price' => 125000,
+            'slug' => 'acne-fighter-serum' // Tambahkan slug jika perlu
         ],
         [
-            'image' => asset('images/produk2.jpeg'),
+            'image' => 'produk2.jpeg',
             'name' => 'Daily Gentle Cleanser',
             'category' => 'Pembersih',
             'price' => 85000,
+            'slug' => 'daily-gentle-cleanser'
         ],
         [
-            'image' => asset('images/produk3.jpeg'),
+            'image' => 'produk3.jpeg',
             'name' => 'Hydrating Toner',
             'category' => 'Toner',
             'price' => 105000,
+            'slug' => 'hydrating-toner'
         ],
     ];
 @endphp
@@ -30,15 +34,12 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @foreach($products as $product)
                 @include('landing.components.product-card', [
-                    {{-- 1. Gunakan asset() agar gambar tidak broken --}}
+                    {{-- Logic ini sudah benar: dia akan mengambil 'images/' + nama file dari array --}}
                     'image' => asset('images/' . ($product['image'] ?? 'default.jpg')),
                     
                     'name' => $product['name'] ?? 'Nama Produk',
                     'category' => $product['category'] ?? 'Umum',
                     'price' => $product['price'] ?? 0,
-                    
-                    {{-- 2. INI FIX ERRORNYA: Gunakan '??' (Null Coalescing Operator) --}}
-                    {{-- Jika key 'slug' tidak ada, pakai 'demo-produk' agar tidak error --}}
                     'slug' => $product['slug'] ?? 'demo-produk' 
                 ])
             @endforeach
