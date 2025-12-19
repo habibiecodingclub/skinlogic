@@ -7,11 +7,11 @@
                 <div class="flex items-center gap-3 mb-6">
                     {{-- Logo Brand --}}
                     <img src="{{ asset('images/brandSL.png') }}" alt="SkinLogic Logo" class="h-12 w-auto object-contain">
-                    <span class="text-2xl font-bold tracking-wide text-white">SkinLogic</span>
+                    <span class="text-2xl font-bold font-poppins tracking-wide text-white">SkinLogic</span>
                 </div>
                 
                 {{-- Deskripsi sesuai gambar --}}
-                <p class="text-gray-400 text-sm leading-relaxed">
+                <p class="text-gray-400 text-sm font-poppins leading-relaxed">
                     Klinik kecantikan modern dengan solusi dermatologi terpercaya untuk memancarkan kecantikan alami Anda.
                 </p>
             </div>

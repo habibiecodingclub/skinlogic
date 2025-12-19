@@ -1,39 +1,63 @@
-@props(['image', 'title', 'category', 'excerpt'])
+{{-- resources/views/landing/components/article-card.blade.php --}}
 
-<div class="group relative flex flex-col gap-3 h-full">
-    {{-- 1. Bagian Gambar & Tombol Aksi --}}
-    {{-- Aspect Ratio 4/3 agar sama persis dengan ukuran kartu Produk --}}
-    <div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-gray-100 border border-gray-100">
-        
-        {{-- Gambar --}}
+<div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
+    {{-- Image --}}
+    <div class="relative h-56 overflow-hidden">
         <img src="{{ $image }}" 
              alt="{{ $title }}" 
-             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
         
-        {{-- Tombol Panah (Melayang di Pojok Kanan Bawah - Mirip tombol Cart Produk) --}}
-        <a href="#" class="absolute bottom-3 right-3 bg-slate-900 text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300 z-10">
-            {{-- Icon Arrow Right --}}
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-            </svg>
-        </a>
+        {{-- Category Badge --}}
+        @if(isset($category))
+            <div class="absolute top-4 left-4">
+                <span class="px-4 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-lg">
+                    {{ $category }}
+                </span>
+            </div>
+        @endif
     </div>
 
-    {{-- 2. Bagian Teks (Di Bawah Gambar) --}}
-    <div class="flex flex-col px-1 flex-grow">
-        {{-- Kategori (Kuning/Emas) --}}
-        <span class="text-xs font-extrabold font-poppins text-yellow-600 uppercase tracking-widest mb-2">
-            {{ $category }}
-        </span>
-
-        {{-- Judul Artikel (Font Standar Bold - Tanpa Serif) --}}
-        <h3 class="text-lg font-bold font-poppins text-slate-900 mb-3 leading-snug group-hover:text-blue-600 transition-colors">
-            {{ $title }}
+    {{-- Content --}}
+    <div class="p-6 flex flex-col flex-grow">
+        {{-- Title --}}
+        <h3 class="text-xl font-extrabold text-slate-900 mb-3 line-clamp-2 hover:text-slate-900 transition-colors">
+            <a href="{{ $url ?? '#' }}">{{ $title }}</a>
         </h3>
         
-        {{-- Deskripsi Singkat --}}
-        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+        {{-- Excerpt --}}
+        <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
             {{ $excerpt }}
         </p>
+
+        {{-- Meta Info --}}
+        @if(isset($date) || isset($reading_time))
+            <div class="flex items-center gap-4 text-xs text-gray-500 mb-4 pb-4 border-b border-gray-200">
+                @if(isset($date))
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span>{{ $date }}</span>
+                    </div>
+                @endif
+                @if(isset($reading_time))
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ $reading_time }} min</span>
+                    </div>
+                @endif
+            </div>
+        @endif
+
+        {{-- Baca Selengkapnya Button --}}
+        <a href="{{ $url ?? '#' }}" 
+           class="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-slate-900 hover:bg-slate-900 text-white font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-xl group">
+            <span>Baca Selengkapnya</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+        </a>
     </div>
 </div>

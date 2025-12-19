@@ -12,7 +12,7 @@
             <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-poppins leading-tight">
                 Apa Kata Mereka?
             </h2>
-            <p class="text-gray-600 text-lg max-w-2xl mx-auto font-light">
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto font-poppins font-light">
                 Ribuan pelanggan telah membuktikan hasil nyata perawatan di SkinLogic. Berikut adalah cerita mereka.
             </p>
         </div>
@@ -84,14 +84,14 @@
                             </div>
 
                             {{-- Isi Testimoni --}}
-                            <p class="text-gray-600 mb-8 italic leading-relaxed text-base font-light flex-grow">
+                            <p class="text-gray-600 font-poppins mb-8 italic leading-relaxed text-base font-light flex-grow">
                                 "{{ $testi['content'] }}"
                             </p>
 
                             {{-- Nama & Role --}}
                             <div>
                                 <h4 class="font-bold text-slate-900 text-xl font-poppins mb-1">{{ $testi['name'] }}</h4>
-                                <span class="text-xs text-blue-600 font-bold uppercase tracking-widest">{{ $testi['role'] }}</span>
+                                <span class="text-xs text-blue-600 font-bold font-poppins uppercase tracking-widest">{{ $testi['role'] }}</span>
                             </div>
 
                         </div>

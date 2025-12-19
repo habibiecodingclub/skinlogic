@@ -41,36 +41,36 @@
                     {{-- Decorative Element --}}
                     <div class="absolute top-8 left-8">
                         <div class="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
-                            <p class="text-primary font-bold text-lg">Est. 2019</p>
+                            <p class="text-primary font-poppins font-bold text-lg">Est. 2019</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- Content Side --}}
                 <div class="p-8 md:p-12 flex flex-col justify-center">
-                    <div class="inline-block px-5 py-2 bg-primary/10 text-primary text-sm font-semibold rounded-full mb-6 self-start tracking-wide">
+                    <div class="inline-block px-5 py-2 bg-primary/10 text-primary text-sm font-semibold font-poppins rounded-full mb-6 self-start tracking-wide">
                         CERITA KAMI
                     </div>
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 font-poppins leading-tight">
                         Perjalanan Menuju<br>Kulit Sehat
                     </h2>
                     <div class="space-y-4">
-                        <p class="text-gray-600 leading-relaxed">
+                        <p class="text-gray-600 font-poppins leading-relaxed">
                             SkinLogic Clinic didirikan dengan visi untuk menghadirkan perawatan kulit berbasis ilmu pengetahuan dan teknologi terkini. Kami percaya bahwa setiap orang berhak mendapatkan kulit yang sehat dan terawat dengan pendekatan yang tepat.
                         </p>
-                        <p class="text-gray-600 leading-relaxed">
+                        <p class="text-gray-600 font-poppins leading-relaxed">
                             Dengan tim dokter spesialis bersertifikat dan peralatan medis modern, kami memberikan solusi personal untuk setiap kebutuhan kulit Anda. Dari konsultasi mendalam hingga perawatan lanjutan, semua dirancang dengan standar medis tertinggi dan hasil yang terukur.
                         </p>
                     </div>
                     {{-- Quick Stats --}}
                     <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-gray-200">
                         <div>
-                            <p class="text-3xl font-bold text-primary mb-1">1000+</p>
-                            <p class="text-gray-600 text-sm">Klien Puas</p>
+                            <p class="text-3xl font-bold font-poppins text-primary mb-1">1000+</p>
+                            <p class="text-gray-600 font-poppins text-sm">Klien Puas</p>
                         </div>
                         <div>
-                            <p class="text-3xl font-bold text-primary mb-1">5+</p>
-                            <p class="text-gray-600 text-sm">Tahun Pengalaman</p>
+                            <p class="text-3xl font-bold  font-poppins text-primary mb-1">5+</p>
+                            <p class="text-gray-600 font-poppins text-sm">Tahun Pengalaman</p>
                         </div>
                     </div>
                 </div>
@@ -80,13 +80,13 @@
         {{-- Values Section --}}
         <div class="mb-20">
             <div class="text-center mb-12">
-                <div class="inline-block px-5 py-2 bg-primary/10 text-primary text-sm font-semibold rounded-full mb-4 tracking-wide">
+                <div class="inline-block px-5 py-2 bg-primary/10 text-primary text-sm font-semibold font-poppins rounded-full mb-4 tracking-wide">
                     NILAI-NILAI KAMI
                 </div>
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-poppins">
                     Prinsip yang Kami Pegang
                 </h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
+                <p class="text-gray-600 font-poppins max-w-2xl mx-auto">
                     Komitmen kami dalam memberikan layanan terbaik untuk kesehatan kulit Anda
                 </p>
             </div>
@@ -102,7 +102,7 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-3 font-poppins">
                         Keamanan & Standar
                     </h3>
-                    <p class="text-gray-600 leading-relaxed">
+                    <p class="text-gray-600 font-poppins leading-relaxed">
                         Setiap prosedur mengikuti protokol medis ketat dengan peralatan tersertifikasi dan steril untuk keamanan maksimal.
                     </p>
                 </div>
@@ -117,7 +117,7 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-3 font-poppins">
                         Berbasis Ilmu
                     </h3>
-                    <p class="text-gray-600 leading-relaxed">
+                    <p class="text-gray-600 font-poppins leading-relaxed">
                         Pendekatan evidence-based dengan riset terkini dalam dermatologi dan estetika medis untuk hasil optimal.
                     </p>
                 </div>
@@ -132,7 +132,7 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-3 font-poppins">
                         Personal & Peduli
                     </h3>
-                    <p class="text-gray-600 leading-relaxed">
+                    <p class="text-gray-600 font-poppins leading-relaxed">
                         Setiap klien mendapat perhatian personal dengan rencana perawatan yang disesuaikan kebutuhan kulitnya.
                     </p>
                 </div>

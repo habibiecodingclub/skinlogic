@@ -1,51 +1,50 @@
 {{-- resources/views/landing/components/product-card.blade.php --}}
-<a href="{{ route('produk.show', $slug) }}" class="group block h-full">
-    {{-- UBAH: hover:border-pink-100 menjadi hover:border-blue-100 --}}
-    <div class="relative flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-blue-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+<a href="{{ route('produk.show', $slug ?? '#') }}" class="group block h-full">
+    
+    {{-- CONTAINER UTAMA --}}
+    {{-- rounded-3xl: Sudut sangat bulat (soft) --}}
+    {{-- hover:-translate-y-2: Efek melayang halus --}}
+    <div class="relative flex flex-col h-full bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-50">
         
-        {{-- 1. Bagian Gambar --}}
-        <div class="relative w-full aspect-[4/3] overflow-hidden bg-gray-50">
-            {{-- Gambar dengan efek Zoom saat Hover --}}
+        {{-- 1. BAGIAN GAMBAR --}}
+        {{-- Aspect Ratio 4:5 (Portrait) agar terlihat jenjang/elegan --}}
+        <div class="relative w-full aspect-[4/5] overflow-hidden bg-gray-100">
+            
+            {{-- Badge Kategori (Pojok Kiri Atas) --}}
+            <span class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-slate-800 shadow-sm">
+                {{ $category }}
+            </span>
+
+            {{-- Gambar Produk --}}
             <img src="{{ $image }}" 
                  alt="{{ $name }}" 
-                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                 class="w-full h-full object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-110">
             
-            {{-- Overlay halus saat hover --}}
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+            {{-- Overlay Gelap Halus saat Hover --}}
+            <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
 
-        {{-- 2. Bagian Konten --}}
-        <div class="p-5 flex flex-col flex-grow">
-            {{-- Kategori --}}
-            {{-- UBAH: text-pink-500 menjadi text-blue-600 --}}
-            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
-                {{ $category }}
-            </p>
+        {{-- 2. BAGIAN KONTEN --}}
+        <div class="p-6 flex flex-col flex-grow text-center">
             
             {{-- Nama Produk --}}
-            {{-- UBAH: group-hover:text-pink-600 menjadi group-hover:text-blue-700 --}}  
-            <h3 class="text-lg font-bold text-slate-900 font-poppins mb-2 line-clamp-2 group-hover:text-yellow-600 transition-colors">
+            <h3 class="text-lg font-bold text-slate-800 font-poppins mb-2 line-clamp-2 group-hover:text-yellow-600 transition-colors">
                 {{ $name }}
             </h3>
             
             {{-- Harga --}}
-            <p class="text-lg font-bold text-slate-900 mt-auto">
+            <p class="text-yellow-600 font-medium text-lg mb-4">
                 Rp {{ number_format($price, 0, ',', '.') }}
             </p>
 
-            {{-- 3. Tombol Detail --}}
-            <div class="mt-5 pt-4 border-t border-dashed border-gray-200">
-                {{-- UBAH: group-hover:text-pink-600 menjadi group-hover:text-blue-700 --}}
-                <div class="flex items-center justify-between text-slate-600 group-hover:text-blue-700 transition-colors">
-                    <span class="text-sm font-semibold font-poppins">Lihat Detail</span>
-                    {{-- UBAH: group-hover:bg-pink-500 menjadi group-hover:bg-blue-600 --}}
-                    <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </div>
+            {{-- 3. TOMBOL 'BACA SELENGKAPNYA' (Di Bawah Harga) --}}
+            {{-- mt-auto: Memaksa tombol selalu di posisi paling bawah --}}
+            <div class="mt-auto w-full pt-2">
+                <span class="inline-block w-full py-2.5 px-4 rounded-full border border-slate-200 text-slate-500 text-xs font-bold uppercase tracking-widest transition-all duration-300 group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900">
+                    Baca Selengkapnya
+                </span>
             </div>
+
         </div>
     </div>
 </a>
