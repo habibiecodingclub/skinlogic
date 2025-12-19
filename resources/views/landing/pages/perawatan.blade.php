@@ -32,26 +32,34 @@
         <div class="max-w-7xl mx-auto px-6 md:px-12">
 
             {{-- Category Tabs --}}
+            {{-- Default active tab 'facial' --}}
             <div x-data="{ activeTab: 'facial' }" class="mb-12">
                 <div class="flex flex-wrap justify-center gap-4 mb-12">
+                    
+                    {{-- Tab 1: FACIAL --}}
                     <button @click="activeTab = 'facial'"
                             :class="activeTab === 'facial' ? 'bg-[#001a4d] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                             class="px-8 py-3 rounded-full font-semibold transition-all duration-300 font-poppins">
                         Facial Treatment
                     </button>
+
+                    {{-- Tab 2: PEELING (Gantikan Body Spa) --}}
+                    <button @click="activeTab = 'peeling'"
+                            :class="activeTab === 'peeling' ? 'bg-[#001a4d] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                            class="px-8 py-3 rounded-full font-semibold transition-all duration-300 font-poppins">
+                        Peeling Treatment
+                    </button>
+
+                    {{-- Tab 3: LASER --}}
                     <button @click="activeTab = 'laser'"
                             :class="activeTab === 'laser' ? 'bg-[#001a4d] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                             class="px-8 py-3 rounded-full font-semibold transition-all duration-300 font-poppins">
                         Laser Therapy
                     </button>
-                    <button @click="activeTab = 'body'"
-                            :class="activeTab === 'body' ? 'bg-[#001a4d] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-                            class="px-8 py-3 rounded-full font-semibold transition-all duration-300 font-poppins">
-                        Body Spa
-                    </button>
+                    
                 </div>
 
-                {{-- Facial Treatment --}}
+                {{-- 1. Facial Treatment Content --}}
                 <div x-show="activeTab === 'facial'"
                      x-transition:enter="transition ease-out duration-300"
                      x-transition:enter-start="opacity-0 transform translate-y-4"
@@ -60,85 +68,70 @@
                     <div class="text-center mb-8">
                         <h2 class="text-3xl font-bold text-gray-900 mb-3 font-poppins">Facial Treatment</h2>
                         <p class="text-gray-600 max-w-2xl mx-auto">
-                            Perawatan wajah profesional untuk mengatasi berbagai masalah kulit dan memberikan hasil optimal
+                            Perawatan wajah profesional untuk membersihkan, menutrisi, dan mencerahkan kulit Anda.
                         </p>
                     </div>
 
-                    {{-- Carousel Container --}}
                     <div class="relative">
                         <div class="swiper facialSwiper">
                             <div class="swiper-wrapper pb-12">
+                                @foreach(App\Services\TreatmentDataService::getTreatmentsByCategory('facial') as $treatment)
                                 <div class="swiper-slide">
                                     @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk1.jpeg'),
-                                        'title' => 'Facial Acne',
-                                        'category' => 'Facial',
-                                        'description' => 'Perawatan khusus untuk mengatasi jerawat dan bekasnya dengan teknologi terkini dan bahan aktif yang aman',
+                                        'image' => $treatment['image'],
+                                        'title' => $treatment['title'],
+                                        'category' => $treatment['category'],
+                                        'description' => $treatment['short_description'],
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-acne'])
+                                        'detailUrl' => route('perawatan.show', ['slug' => $treatment['slug']])
                                     ])
                                 </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk2.jpeg'),
-                                        'title' => 'Facial Brightening',
-                                        'category' => 'Facial',
-                                        'description' => 'Mencerahkan kulit wajah kusam dan meratakan warna kulit untuk tampilan lebih bercahaya',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-brightening'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk3.jpeg'),
-                                        'title' => 'Facial Anti Aging',
-                                        'category' => 'Facial',
-                                        'description' => 'Mengurangi tanda-tanda penuaan seperti garis halus dan kerutan untuk kulit lebih muda',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-anti-aging'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk1.jpeg'),
-                                        'title' => 'Facial Hydrating',
-                                        'category' => 'Facial',
-                                        'description' => 'Memberikan kelembaban intensif untuk kulit kering dan dehidrasi dengan serum khusus',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-hydrating'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk2.jpeg'),
-                                        'title' => 'Facial Glow',
-                                        'category' => 'Facial',
-                                        'description' => 'Perawatan untuk mendapatkan kulit glowing dan sehat dengan hasil instan',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-glow'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk3.jpeg'),
-                                        'title' => 'Facial Detox',
-                                        'category' => 'Facial',
-                                        'description' => 'Membersihkan racun dan kotoran dalam kulit untuk wajah lebih segar dan bersih',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'facial-detox'])
-                                    ])
-                                </div>
+                                @endforeach
                             </div>
                             <div class="swiper-pagination"></div>
                         </div>
-
-                        {{-- Navigation Buttons --}}
                         <div class="swiper-button-prev !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-left-4"></div>
                         <div class="swiper-button-next !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-right-4"></div>
                     </div>
                 </div>
 
-                {{-- Laser Therapy --}}
+                {{-- 2. Peeling Treatment Content (Gantikan Body Spa) --}}
+                <div x-show="activeTab === 'peeling'"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 transform translate-y-4"
+                     x-transition:enter-end="opacity-100 transform translate-y-0">
+
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-3 font-poppins">Peeling Treatment</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">
+                            Eksfoliasi kulit untuk mengangkat sel kulit mati, mengatasi jerawat, dan flek hitam.
+                        </p>
+                    </div>
+
+                    <div class="relative">
+                        <div class="swiper peelingSwiper">
+                            <div class="swiper-wrapper pb-12">
+                                @foreach(App\Services\TreatmentDataService::getTreatmentsByCategory('peeling') as $treatment)
+                                <div class="swiper-slide">
+                                    @include('landing.components.treatment-card', [
+                                        'image' => $treatment['image'],
+                                        'title' => $treatment['title'],
+                                        'category' => $treatment['category'],
+                                        'description' => $treatment['short_description'],
+                                        'appointmentUrl' => '#reservasi',
+                                        'detailUrl' => route('perawatan.show', ['slug' => $treatment['slug']])
+                                    ])
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                        <div class="swiper-button-prev !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-left-4"></div>
+                        <div class="swiper-button-next !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-right-4"></div>
+                    </div>
+                </div>
+
+                {{-- 3. Laser Therapy Content --}}
                 <div x-show="activeTab === 'laser'"
                      x-transition:enter="transition ease-out duration-300"
                      x-transition:enter-start="opacity-0 transform translate-y-4"
@@ -147,166 +140,28 @@
                     <div class="text-center mb-8">
                         <h2 class="text-3xl font-bold text-gray-900 mb-3 font-poppins">Laser Therapy</h2>
                         <p class="text-gray-600 max-w-2xl mx-auto">
-                            Teknologi laser canggih untuk mengatasi berbagai masalah kulit dengan hasil yang efektif
+                            Teknologi laser canggih untuk peremajaan, acne, hair removal, dan penghapusan tato.
                         </p>
                     </div>
 
-                    {{-- Carousel Container --}}
                     <div class="relative">
                         <div class="swiper laserSwiper">
                             <div class="swiper-wrapper pb-12">
+                                @foreach(App\Services\TreatmentDataService::getTreatmentsByCategory('laser') as $treatment)
                                 <div class="swiper-slide">
                                     @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk1.jpeg'),
-                                        'title' => 'Laser Hair Removal',
-                                        'category' => 'Laser',
-                                        'description' => 'Menghilangkan bulu secara permanen dengan teknologi laser yang aman dan nyaman',
+                                        'image' => $treatment['image'],
+                                        'title' => $treatment['title'],
+                                        'category' => $treatment['category'],
+                                        'description' => $treatment['short_description'],
                                         'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-hair-removal'])
+                                        'detailUrl' => route('perawatan.show', ['slug' => $treatment['slug']])
                                     ])
                                 </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk2.jpeg'),
-                                        'title' => 'Laser Carbon Peel',
-                                        'category' => 'Laser',
-                                        'description' => 'Mengangkat sel kulit mati dan mencerahkan kulit dengan teknologi laser carbon',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-carbon-peel'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk3.jpeg'),
-                                        'title' => 'Laser Tattoo Removal',
-                                        'category' => 'Laser',
-                                        'description' => 'Menghilangkan tato dengan aman menggunakan teknologi laser Q-Switch',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-tattoo-removal'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk1.jpeg'),
-                                        'title' => 'Laser Rejuvenation',
-                                        'category' => 'Laser',
-                                        'description' => 'Meremajakan kulit dan mengurangi tanda penuaan dengan laser fraksional',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-rejuvenation'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk2.jpeg'),
-                                        'title' => 'Laser Acne Scar',
-                                        'category' => 'Laser',
-                                        'description' => 'Mengatasi bekas jerawat dan lubang bekas jerawat dengan laser resurfacing',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-acne-scar'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk3.jpeg'),
-                                        'title' => 'Laser Pigmentation',
-                                        'category' => 'Laser',
-                                        'description' => 'Menghilangkan flek hitam dan hiperpigmentasi dengan laser targeting',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'laser-pigmentation'])
-                                    ])
-                                </div>
+                                @endforeach
                             </div>
                             <div class="swiper-pagination"></div>
                         </div>
-
-                        {{-- Navigation Buttons --}}
-                        <div class="swiper-button-prev !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-left-4"></div>
-                        <div class="swiper-button-next !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-right-4"></div>
-                    </div>
-                </div>
-
-                {{-- Body Spa --}}
-                <div x-show="activeTab === 'body'"
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 transform translate-y-4"
-                     x-transition:enter-end="opacity-100 transform translate-y-0">
-
-                    <div class="text-center mb-8">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-3 font-poppins">Body Spa</h2>
-                        <p class="text-gray-600 max-w-2xl mx-auto">
-                            Perawatan tubuh menyeluruh untuk relaksasi dan kecantikan tubuh Anda
-                        </p>
-                    </div>
-
-                    {{-- Carousel Container --}}
-                    <div class="relative">
-                        <div class="swiper bodySwiper">
-                            <div class="swiper-wrapper pb-12">
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk1.jpeg'),
-                                        'title' => 'Body Slimming',
-                                        'category' => 'Body Spa',
-                                        'description' => 'Program pelangsingan tubuh dengan teknologi canggih untuk hasil optimal',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-slimming'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk2.jpeg'),
-                                        'title' => 'Body Whitening',
-                                        'category' => 'Body Spa',
-                                        'description' => 'Mencerahkan kulit tubuh secara menyeluruh untuk tampilan lebih cerah',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-whitening'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk3.jpeg'),
-                                        'title' => 'Body Massage',
-                                        'category' => 'Body Spa',
-                                        'description' => 'Pijat relaksasi untuk menghilangkan stress dan ketegangan otot',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-massage'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk1.jpeg'),
-                                        'title' => 'Body Scrub',
-                                        'category' => 'Body Spa',
-                                        'description' => 'Mengangkat sel kulit mati untuk kulit tubuh lebih halus dan cerah',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-scrub'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk2.jpeg'),
-                                        'title' => 'Body Detox',
-                                        'category' => 'Body Spa',
-                                        'description' => 'Mengeluarkan racun dari tubuh untuk kesehatan dan kecantikan optimal',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-detox'])
-                                    ])
-                                </div>
-                                <div class="swiper-slide">
-                                    @include('landing.components.treatment-card', [
-                                        'image' => asset('images/produk3.jpeg'),
-                                        'title' => 'Body Firming',
-                                        'category' => 'Body Spa',
-                                        'description' => 'Mengencangkan kulit tubuh yang kendur dengan treatment khusus',
-                                        'appointmentUrl' => '#reservasi',
-                                        'detailUrl' => route('perawatan.show', ['slug' => 'body-firming'])
-                                    ])
-                                </div>
-                            </div>
-                            <div class="swiper-pagination"></div>
-                        </div>
-
-                        {{-- Navigation Buttons --}}
                         <div class="swiper-button-prev !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-left-4"></div>
                         <div class="swiper-button-next !w-12 !h-12 !bg-white !rounded-full !shadow-lg after:!text-[#001a4d] after:!text-lg !-right-4"></div>
                     </div>
@@ -339,8 +194,7 @@
     {{-- Swiper JS --}}
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Facial Swiper
-        const facialSwiper = new Swiper('.facialSwiper', {
+        const commonSwiperConfig = {
             slidesPerView: 1,
             spaceBetween: 30,
             pagination: {
@@ -361,56 +215,11 @@
                     spaceBetween: 30,
                 }
             }
-        });
+        };
 
-        // Laser Swiper
-        const laserSwiper = new Swiper('.laserSwiper', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                }
-            }
-        });
-
-        // Body Swiper
-        const bodySwiper = new Swiper('.bodySwiper', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                }
-            }
-        });
+        // Initialize Swipers
+        new Swiper('.facialSwiper', commonSwiperConfig);
+        new Swiper('.peelingSwiper', commonSwiperConfig);
+        new Swiper('.laserSwiper', commonSwiperConfig);
     </script>
 @endsection
-
-// gini mo dlu deh

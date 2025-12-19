@@ -22,9 +22,9 @@
         <div class="grid md:grid-cols-3 gap-8">
             @include('landing.components.treatment-card', [
                 'image' => asset('images/produk1.jpeg'),
-                'title' => 'Facial Acne',
+                'title' => 'DNA Salmon',
                 'category' => 'Facial',
-                'description' => 'Perawatan khusus untuk mengatasi jerawat dan bekasnya dengan teknologi.....',
+                'description' => 'Perawatan skin-rejuvenation berbasis injeksi/mesotherapy untuk......',
                 'appointmentUrl' => '#',
                 'detailUrl' => route('perawatan.show', ['slug' => 'facial-acne'])
             ])
