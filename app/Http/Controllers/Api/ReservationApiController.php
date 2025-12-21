@@ -209,7 +209,7 @@ class ReservationApiController extends Controller
             // 4. KIRIM EMAIL KONFIRMASI (Di luar transaction agar tidak membatalkan booking jika email error)
             try {
                 // Pastikan class Mailable sudah dibuat: php artisan make:mail ReservationConfirmation
-                Mail::to($request->pelanggan['email'])->send(new ReservationConfirmation($reservation));
+                Mail::to($request->pelanggan['email'])->queue(new ReservationConfirmation($reservation));
             } catch (\Exception $e) {
                 Log::error("Gagal kirim email: " . $e->getMessage());
                 // Tidak return error, biarkan booking tetap sukses.
