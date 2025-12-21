@@ -2,25 +2,25 @@
     $products = [
         [
             // HAPUS asset() dan 'images/', cukup nama file saja
-            'image' => 'treatment1.jpeg', 
-            'name' => 'Acne Fighter Serum',
-            'category' => 'Serum Wajah',
-            'price' => 125000,
-            'slug' => 'acne-fighter-serum' // Tambahkan slug jika perlu
+            'image' => 'produk2.jpeg', 
+            'name' => 'Paket Lengkap SkinLogic',
+            'category' => 'Kecantikan',
+            'price' => 350000,
+            'slug' => 'paket-lengkap-glowing' // Tambahkan slug jika perlu
         ],
         [
-            'image' => 'produk2.jpeg',
-            'name' => 'Daily Gentle Cleanser',
-            'category' => 'Pembersih',
-            'price' => 85000,
-            'slug' => 'daily-gentle-cleanser'
+            'image' => 'produk1.jpeg',
+            'name' => 'Serum Retinol Intensif',
+            'category' => 'Serum',
+            'price' => 150000,
+            'slug' => 'serum-retinol-intensif'
         ],
         [
             'image' => 'produk3.jpeg',
-            'name' => 'Hydrating Toner',
-            'category' => 'Toner',
-            'price' => 105000,
-            'slug' => 'hydrating-toner'
+            'name' => 'Night Cream Acne',
+            'category' => 'Cream',
+            'price' => 120000,
+            'slug' => 'night-cream-acne'
         ],
     ];
 @endphp
