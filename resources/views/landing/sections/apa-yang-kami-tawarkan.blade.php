@@ -22,29 +22,29 @@
         <div class="grid md:grid-cols-3 gap-8">
             @include('landing.components.treatment-card', [
                 'image' => asset('images/produk1.jpeg'),
-                'title' => 'DNA Salmon',
+                'title' => 'Facial Premium',
                 'category' => 'Facial',
-                'description' => 'Perawatan skin-rejuvenation berbasis injeksi/mesotherapy untuk......',
+                'description' => 'Facial lengkap dengan serum dan teknologi HF......',
                 'appointmentUrl' => '#',
-                'detailUrl' => route('perawatan.show', ['slug' => 'facial-acne'])
+                'detailUrl' => route('perawatan.show', ['slug' => 'facial-premium'])
             ])
 
             @include('landing.components.treatment-card', [
                 'image' => asset('images/produk2.jpeg'),
-                'title' => 'Laser Hair Removal',
+                'title' => 'IPL Rejuve',
                 'category' => 'Laser',
-                'description' => 'Menghilangkan bulu secara permanen dengan teknologi laser yang aman dan.....',
+                'description' => 'Peremajaan kulit dengan teknologi cahaya .....',
                 'appointmentUrl' => '#',
-                'detailUrl' => route('perawatan.show', ['slug' => 'laser-hair-removal'])
+                'detailUrl' => route('perawatan.show', ['slug' => 'ipl-rejuve'])
             ])
 
             @include('landing.components.treatment-card', [
                 'image' => asset('images/produk3.jpeg'),
-                'title' => 'Facial Acne',
-                'category' => 'Facial',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo.....',
+                'title' => 'Peeling Acne',
+                'category' => 'Peeling',
+                'description' => 'Mengeringkan jerawat dan mengurangkan minyak .....',
                 'appointmentUrl' => '#',
-                'detailUrl' => '#'
+                'detailUrl' => route('perawatan.show', ['slug' => 'peeling-acne'])
             ])
         </div>
     </div>
