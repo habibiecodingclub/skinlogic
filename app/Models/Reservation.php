@@ -72,9 +72,12 @@ class Reservation extends Model
         return $this->belongsTo(Pelanggan::class, 'pelanggan_id');
     }
 
-    public function terapis(): BelongsTo
+    // Ubah relasi terapis
+    public function terapis()
     {
-        return $this->belongsTo(User::class, 'terapis_id');
+        // Sekarang connect ke Model Terapis, BUKAN User
+        // dd("HALO SAYA DISINI, KODINGAN BARU!");
+        return $this->belongsTo(Terapis::class, 'terapis_id');
     }
 
     public function perawatans(): BelongsToMany

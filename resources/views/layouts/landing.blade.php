@@ -13,6 +13,7 @@
 <body class="antialiased bg-gray-50 text-gray-900">
     @yield('content')
 
+    @include('landing.components.reservation')
     <!-- Alpine.js Core -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

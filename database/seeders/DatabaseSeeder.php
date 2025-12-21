@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-          $adminRole   = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole   = Role::firstOrCreate(['name' => 'admin']);
         $managerRole = Role::firstOrCreate(['name' => 'manajer']);
         $kasirRole   = Role::firstOrCreate(['name' => 'kasir']);
 
@@ -36,6 +36,11 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('manajer'),
         ]);
         $manager->assignRole($managerRole);
+        // Data dummy lain
+        Pelanggan::factory()->count(10)->create();
+        Produk::factory()->count(10)->create();
+        Perawatan::factory()->count(10)->create();
+        Pesanan::factory()->count(30)->create();
 
         $kasir = User::factory()->create([
             'name' => 'Kasir User',
@@ -44,7 +49,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $kasir->assignRole($kasirRole);
 
-            $terapisRole = Role::firstOrCreate(['name' => 'terapis', 'guard_name' => 'web']);
+        $terapisRole = Role::firstOrCreate(['name' => 'terapis', 'guard_name' => 'web']);
 
     // Berikan permission untuk terapis
     // $terapisRole->givePermissionTo([
@@ -54,10 +59,5 @@ class DatabaseSeeder extends Seeder
     // ]);
 
 
-        // Data dummy lain
-        // Pelanggan::factory()->count(10)->create();
-        // Produk::factory()->count(10)->create();
-        // Perawatan::factory()->count(5)->create();
-        // Pesanan::factory()->count(30)->create();
     }
 }
