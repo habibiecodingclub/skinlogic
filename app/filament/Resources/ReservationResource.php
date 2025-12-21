@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use App\Models\Pelanggan;
 use App\Models\Perawatan;
 use App\Models\User;
+use App\Models\Terapis;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -104,9 +105,11 @@ class ReservationResource extends Resource
                                     ->seconds(false)
                                     ->default('09:00'),
 
+                                // Pastikan import model ini di paling atas file:
+
                                 Forms\Components\Select::make('terapis_id')
                                     ->label('Terapis/Staff')
-                                    ->options(User::role('terapis')->orWhere('id', auth()->id())->pluck('name', 'id'))
+                                    ->options(Terapis::where('is_active', true)->pluck('nama', 'id')) // Ambil dari model Terapis
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),
@@ -222,6 +225,10 @@ Forms\Components\Section::make('Pilihan Perawatan')
                     ->label('Jam')
                     ->time('H:i'),
 
+                Tables\Columns\TextColumn::make('terapis.nama')
+                    ->label('Terapis')
+                    ->placeholder('Belum di isi'),
+                
                 Tables\Columns\BadgeColumn::make('status')
                     ->label('Status')
                     ->formatStateUsing(fn($state) => Reservation::getStatusOptions()[$state] ?? $state)
@@ -234,9 +241,6 @@ Forms\Components\Section::make('Pilihan Perawatan')
                         default => 'gray',
                     }),
 
-                Tables\Columns\TextColumn::make('terapis.name')
-                    ->label('Terapis')
-                    ->placeholder('-'),
 
                 Tables\Columns\TextColumn::make('total_harga')
                     ->label('Total')
