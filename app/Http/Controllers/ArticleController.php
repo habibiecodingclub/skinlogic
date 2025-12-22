@@ -9,24 +9,24 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-   // TAMBAHKAN METHOD INI
-public function home()
-{
-    // Ambil 3 artikel terbaru untuk homepage
-    $articles = Article::where('status', 'published')
-        ->where('published_at', '<=', now())
-        ->with(['category', 'author'])
-        ->latest('published_at')
-        ->take(3)
-        ->get();
-    
-    return view('landing.index', compact('articles'));
-}
+    // Homepage - 3 artikel terbaru
+    public function home()
+    {
+        $articles = Article::where('status', 'published')
+            ->whereDate('published_at', '<=', now())
+            ->with(['category', 'author'])
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+        
+        return view('landing.index', compact('articles'));
+    }
+
     // List semua artikel
     public function index(Request $request)
     {
         $query = Article::where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->whereDate('published_at', '<=', now())
             ->with(['category', 'author', 'tags']);
 
         // Search
@@ -44,12 +44,12 @@ public function home()
         $categories = ArticleCategory::where('is_active', true)
             ->withCount(['articles' => function($query) {
                 $query->where('status', 'published')
-                      ->where('published_at', '<=', now());
+                      ->whereDate('published_at', '<=', now());
             }])
             ->get();
 
         $featuredArticles = Article::where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->whereDate('published_at', '<=', now()) 
             ->latest('published_at')
             ->take(3)
             ->get();
@@ -62,6 +62,7 @@ public function home()
     {
         $article = Article::where('slug', $slug)
             ->where('status', 'published')
+            ->whereDate('published_at', '<=', now()) 
             ->with(['category', 'author', 'tags'])
             ->firstOrFail();
 
@@ -70,7 +71,7 @@ public function home()
 
         // Related articles (same category)
         $relatedArticles = Article::where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->whereDate('published_at', '<=', now())
             ->where('id', '!=', $article->id)
             ->where('category_id', $article->category_id)
             ->latest('published_at')
@@ -86,7 +87,7 @@ public function home()
         $category = ArticleCategory::where('slug', $slug)->firstOrFail();
         
         $articles = Article::where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->whereDate('published_at', '<=', now())
             ->where('category_id', $category->id)
             ->with(['category', 'author', 'tags'])
             ->latest('published_at')
@@ -95,7 +96,7 @@ public function home()
         $categories = ArticleCategory::where('is_active', true)
             ->withCount(['articles' => function($query) {
                 $query->where('status', 'published')
-                      ->where('published_at', '<=', now());
+                      ->whereDate('published_at', '<=', now());
             }])
             ->get();
 
@@ -108,7 +109,7 @@ public function home()
         $tag = ArticleTag::where('slug', $slug)->firstOrFail();
         
         $articles = Article::where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->whereDate('published_at', '<=', now())
             ->whereHas('tags', function($query) use ($tag) {
                 $query->where('article_tags.id', $tag->id);
             })
@@ -119,7 +120,7 @@ public function home()
         $categories = ArticleCategory::where('is_active', true)
             ->withCount(['articles' => function($query) {
                 $query->where('status', 'published')
-                      ->where('published_at', '<=', now());
+                      ->whereDate('published_at', '<=', now());
             }])
             ->get();
 

@@ -5,7 +5,7 @@
     @include('landing.sections.header')
 
     {{-- Hero Section with Breadcrumb --}}
-    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-48 -mt-6">
+    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-[70vh] -mt-6 flex items-center">
         <div class="absolute inset-0 opacity-75">
             <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
         </div>
