@@ -14,6 +14,7 @@
     @yield('content')
 
     @include('landing.components.reservation')
+    @include('landing.components.reservation-detail')
     <!-- Alpine.js Core -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

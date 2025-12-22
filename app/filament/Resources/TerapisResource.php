@@ -50,13 +50,13 @@ class TerapisResource extends Resource
                             ]),
 
                         // Input Foto
-                        Forms\Components\FileUpload::make('foto')
-                            ->label('Foto Profil')
-                            ->image() // Validasi harus gambar
-                            ->avatar() // Tampilan bulat saat upload
-                            ->imageEditor() // Fitur crop/edit ringan
-                            ->directory('terapis') // Simpan di storage/app/public/terapis
-                            ->columnSpanFull(),
+                        // Forms\Components\FileUpload::make('foto')
+                        //     ->label('Foto Profil')
+                        //     ->image() // Validasi harus gambar
+                        //     ->avatar() // Tampilan bulat saat upload
+                        //     ->imageEditor() // Fitur crop/edit ringan
+                        //     ->directory('terapis') // Simpan di storage/app/public/terapis
+                        //     ->columnSpanFull(),
 
                         // Toggle Status Aktif
                         Forms\Components\Toggle::make('is_active')
@@ -74,10 +74,10 @@ class TerapisResource extends Resource
         return $table
             ->columns([
                 // Kolom Foto
-                Tables\Columns\ImageColumn::make('foto')
-                    ->label('Foto')
-                    ->circular() // Tampilan bulat
-                    ->defaultImageUrl(url('/images/default-avatar.png')), // Gambar default jika kosong (opsional)
+                // Tables\Columns\ImageColumn::make('foto')
+                //     ->label('Foto')
+                //     ->circular() // Tampilan bulat
+                //     ->defaultImageUrl(url('/images/default-avatar.png')), // Gambar default jika kosong (opsional)
 
                 // Kolom Nama
                 Tables\Columns\TextColumn::make('nama')
