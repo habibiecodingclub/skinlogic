@@ -6,23 +6,25 @@
 @include('landing.sections.header')
 
 {{-- Hero Section --}}
-<section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-32 -mt-6">
-    <div class="absolute inset-0 opacity-75">
-        <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-white transition-colors">
-                Tentang Kami
-            </h1>
-            <div class="flex items-center justify-center gap-2 text-gray-900">
-                <a href="/" class="hover:text-white transition-colors">Home</a>
-                <span>/</span>
-                <span class="text-gray-900 font-regular font-poppins hover:text-white transition-colors">Tentang Kami</span>
+<section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-[70vh] -mt-6 flex items-center">
+
+        <div class="absolute inset-0 opacity-70">
+            <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-white transition-colors">
+                    Tentang Kami
+                </h1>
+                <div class="flex items-center justify-center gap-2 text-gray-900">
+                    <a href="/" class="hover:text-white transition-colors">Home</a>
+                    <span>/</span>
+                    <span class="text-gray-900 font-regular font-poppins hover:text-white transition-colors">Produk</span>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 {{-- About Section --}}
 <section class="relative -mt-20 pb-10">
@@ -154,13 +156,13 @@
                     Konsultasikan kebutuhan kulit Anda dengan dokter spesialis kami dan dapatkan solusi terbaik yang dipersonalisasi
                 </p>
                 <div class="flex flex-wrap justify-center gap-4">
-                    <a href="#reservasi"
+                    <button onclick="window.dispatchEvent(new CustomEvent('open-reservation'))" 
                        class="inline-flex items-center gap-2 bg-white text-[#001a4d] px-8 py-4 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         Buat Janji Sekarang
-                    </a>
+                    </button>
                     <a href="https://wa.me/6281234567890?text=Halo, saya tertarik dengan treatment"
                        target="_blank"
                        class="inline-flex items-center gap-2 bg-green-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
