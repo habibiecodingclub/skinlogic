@@ -1,5 +1,4 @@
 {{-- resources/views/landing/components/article-card.blade.php --}}
-
 <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
     {{-- Image --}}
     <div class="relative h-56 overflow-hidden">

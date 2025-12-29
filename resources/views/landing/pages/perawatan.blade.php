@@ -16,11 +16,6 @@
                 <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-white transition-colors">
                     Perawatan
                 </h1>
-                <div class="flex items-center justify-center gap-2 text-gray-900">
-                    <a href="/" class="hover:text-white transition-colors">Home</a>
-                    <span>/</span>
-                    <span class="text-gray-900 font-regular font-poppins hover:text-white transition-colors">Perawatan</span>
-                </div>
             </div>
         </div>
     </section>

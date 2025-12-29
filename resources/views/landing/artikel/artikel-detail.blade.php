@@ -14,18 +14,7 @@
     </div>
     <div class="max-w-4xl mx-auto px-6 relative z-10">
         {{-- Breadcrumb --}}
-        <div class="flex items-center gap-2 text-sm text-gray-600 mb-6">
-            <a href="/" class="hover:text-primary transition-colors">Home</a>
-            <span>/</span>
-            <a href="{{ route('artikel.index') }}" class="hover:text-primary transition-colors">Artikel</a>
-            @if($article->category)
-            <span>/</span>
-            <a href="{{ route('artikel.category', $article->category->slug) }}" class="hover:text-primary transition-colors">
-                {{ $article->category->name }}
-            </a>
-            @endif
-        </div>
-
+    
         {{-- Title --}}
         <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 font-poppins leading-tight">
             {{ $article->title }}
