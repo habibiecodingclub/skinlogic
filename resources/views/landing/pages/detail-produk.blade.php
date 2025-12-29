@@ -14,13 +14,6 @@
                 <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-blue-600 transition-colors">
                     {{ $product['category'] }}
                 </h1>
-                <div class="flex items-center justify-center gap-2 text-gray-900 font-poppins hover:text-blue-600 transition-colors">
-                    <a href="/" class="hover:text-gray-900 transition-colors">Home</a>
-                    <span>/</span>
-                    <a href="{{ route('produk.index') }}" class="hover:text-blue-600 transition-colors">Produk</a>
-                    <span>/</span>
-                    <span class="text-gray-900 font-medium hover:text-blue-600 transition-colors">{{ $product['name'] }} </span>
-                </div>
             </div>
         </div>
     </section>

@@ -1,3 +1,5 @@
+<!-- resource/views/landing/artikel/artikel.blade.php -->
+
 @extends('landing.index')
 
 @section('content')
@@ -20,11 +22,6 @@
                     Artikel & Tips Perawatan Kulit
                 @endif
             </h1>
-            <div class="flex items-center justify-center gap-2 text-gray-900">
-                <a href="/" class="hover:text-white transition-colors">Home</a>
-                <span>/</span>
-                <span class="text-gray-900 font-regular font-poppins hover:text-white transition-colors">Artikel</span>
-            </div>
         </div>
     </div>
 </section>

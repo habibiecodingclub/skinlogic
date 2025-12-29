@@ -55,7 +55,7 @@ class ProductService
             'name' => 'Sunscreen Snowwhite',
             'category' => 'Protection',
             'price' => 120000,
-            'image' => 'produk4.jpeg',
+            'image' => 'produk5.jpeg',
             'description' => 'Tabir surya dengan finish mencerahkan (Brightening) untuk tampilan kulit yang lebih putih bersih dan terlindungi maksimal.',
             'benefits' => ['UV Protection', 'Efek Mencerahkan', 'Ringan di Wajah']
         ],
@@ -65,7 +65,7 @@ class ProductService
             'name' => 'Night Cream Retinol-C',
             'category' => 'Night Cream',
             'price' => 120000,
-            'image' => 'produk3.jpeg',
+            'image' => 'produk6.jpeg',
             'description' => 'Krim malam dengan kombinasi Retinol dan Vitamin C untuk anti-aging, memudarkan garis halus, dan mencerahkan noda hitam.',
             'benefits' => ['Anti Aging', 'Mencerahkan', 'Regenerasi Kulit']
         ],
@@ -75,7 +75,7 @@ class ProductService
             'name' => 'Night Cream Acne',
             'category' => 'Night Cream',
             'price' => 120000,
-            'image' => 'produk2.jpeg',
+            'image' => 'produk7.jpeg',
             'description' => 'Krim malam formulasi khusus untuk kulit berjerawat. Membantu mengeringkan jerawat aktif dan mencegah timbulnya jerawat baru.',
             'benefits' => ['Mengeringkan Jerawat', 'Kontrol Minyak', 'Anti Bakteri']
         ],
@@ -85,7 +85,7 @@ class ProductService
             'name' => 'Serum Retinol Intensif',
             'category' => 'Serum',
             'price' => 150000,
-            'image' => 'produk1.jpeg',
+            'image' => 'produk8.jpeg',
             'description' => 'Serum anti-aging potent untuk mempercepat pergantian sel kulit, menyamarkan kerutan, dan memperbaiki tekstur kulit.',
             'benefits' => ['Menyamarkan Kerutan', 'Memperbaiki Tekstur', 'Kencangkan Kulit']
         ],
