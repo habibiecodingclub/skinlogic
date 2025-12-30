@@ -23,14 +23,37 @@
 
             {{-- Desktop Navigation --}}
             <nav class="hidden lg:flex items-center gap-8">
-                <a href="{{ route('home') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Home</a>
-                <a href="{{ route('produk.index') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Produk</a>
-                <a href="{{ route('perawatan.index') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Perawatan</a>
-                <a href="{{ route('tentang-kami') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Tentang Kami</a>
-                <a href="{{ route('artikel.index') }}" class="text-white hover:text-blue-300 font-medium transition-colors font-poppins">Artikel</a>
+                {{-- HOME --}}
+                <a href="{{ route('home') }}" 
+                   class="text-white font-medium transition-all duration-300 font-poppins border-b-2 pb-1 {{ request()->routeIs('home') ? 'border-white font-bold' : 'border-transparent hover:border-blue-300 hover:text-blue-300' }}">
+                   Home
+                </a>
+
+                {{-- PRODUK --}}
+                <a href="{{ route('produk.index') }}" 
+                   class="text-white font-medium transition-all duration-300 font-poppins border-b-2 pb-1 {{ request()->routeIs('produk.*') ? 'border-white font-bold' : 'border-transparent hover:border-blue-300 hover:text-blue-300' }}">
+                   Produk
+                </a>
+
+                {{-- PERAWATAN --}}
+                <a href="{{ route('perawatan.index') }}" 
+                   class="text-white font-medium transition-all duration-300 font-poppins border-b-2 pb-1 {{ request()->routeIs('perawatan.*') ? 'border-white font-bold' : 'border-transparent hover:border-blue-300 hover:text-blue-300' }}">
+                   Perawatan
+                </a>
+
+                {{-- TENTANG KAMI --}}
+                <a href="{{ route('tentang-kami') }}" 
+                   class="text-white font-medium transition-all duration-300 font-poppins border-b-2 pb-1 {{ request()->routeIs('tentang-kami') ? 'border-white font-bold' : 'border-transparent hover:border-blue-300 hover:text-blue-300' }}">
+                   Tentang Kami
+                </a>
+
+                {{-- ARTIKEL --}}
+                <a href="{{ route('artikel.index') }}" 
+                   class="text-white font-medium transition-all duration-300 font-poppins border-b-2 pb-1 {{ request()->routeIs('artikel.*') ? 'border-white font-bold' : 'border-transparent hover:border-blue-300 hover:text-blue-300' }}">
+                   Artikel
+                </a>
 
                 {{-- TOMBOL RESERVASI --}}
-                {{-- PERUBAHAN UTAMA DI SINI: Gunakan $dispatch --}}
                 <button @click="$dispatch('open-reservation')"
                         class="flex items-center gap-2 bg-white text-[#001a4d] px-6 py-2.5 rounded-full font-semibold font-poppins hover:bg-blue-50 hover:scale-105 transition-all duration-300 shadow-md cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,12 +73,36 @@
         {{-- Mobile Navigation --}}
         <nav x-show="mobileMenuOpen" style="display: none;" class="lg:hidden py-4 border-t border-white/10">
             <div class="flex flex-col gap-2">
-                <a href="{{ route('home') }}" class="text-white hover:bg-white/10 px-4 py-3 rounded-lg font-poppins">Home</a>
-                {{-- Link lainnya ... --}}
+                {{-- Link Mobile disamakan dengan Desktop + Logic Active State --}}
+                
+                <a href="{{ route('home') }}" 
+                   class="px-4 py-3 rounded-lg font-poppins transition-colors {{ request()->routeIs('home') ? 'bg-white/20 text-white font-bold' : 'text-white hover:bg-white/10' }}">
+                   Home
+                </a>
+
+                <a href="{{ route('produk.index') }}" 
+                   class="px-4 py-3 rounded-lg font-poppins transition-colors {{ request()->routeIs('produk.*') ? 'bg-white/20 text-white font-bold' : 'text-white hover:bg-white/10' }}">
+                   Produk
+                </a>
+
+                <a href="{{ route('perawatan.index') }}" 
+                   class="px-4 py-3 rounded-lg font-poppins transition-colors {{ request()->routeIs('perawatan.*') ? 'bg-white/20 text-white font-bold' : 'text-white hover:bg-white/10' }}">
+                   Perawatan
+                </a>
+
+                <a href="{{ route('tentang-kami') }}" 
+                   class="px-4 py-3 rounded-lg font-poppins transition-colors {{ request()->routeIs('tentang-kami') ? 'bg-white/20 text-white font-bold' : 'text-white hover:bg-white/10' }}">
+                   Tentang Kami
+                </a>
+
+                <a href="{{ route('artikel.index') }}" 
+                   class="px-4 py-3 rounded-lg font-poppins transition-colors {{ request()->routeIs('artikel.*') ? 'bg-white/20 text-white font-bold' : 'text-white hover:bg-white/10' }}">
+                   Artikel
+                </a>
                 
                 {{-- Tombol Mobile --}}
                 <button @click="$dispatch('open-reservation'); mobileMenuOpen = false" 
-                        class="w-full bg-white text-[#001a4d] px-4 py-3 rounded-lg font-semibold font-poppins text-center mt-2">
+                        class="w-full bg-white text-[#001a4d] px-4 py-3 rounded-lg font-semibold font-poppins text-center mt-2 hover:bg-gray-100 transition-colors">
                     Reservasi Sekarang
                 </button>
             </div>

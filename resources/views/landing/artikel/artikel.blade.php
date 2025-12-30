@@ -7,17 +7,24 @@
 @include('landing.sections.header')
 
 {{-- Hero Section --}}
-<section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-32 pb-32 -mt-6">
-    <div class="absolute inset-0 opacity-75">
-        <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-white transition-colors">
+<section
+    class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50
+           h-[420px] flex items-center overflow-hidden">
+    <div
+        class="absolute inset-0 opacity-75"
+        style="
+            background-image: url('{{ asset('images/herosection-on-detail.png') }}');
+            background-size: cover;
+            background-position: center 40%;
+        "
+    ></div>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
+        <div class="text-center pt-10 md:pt-16">
+            <h1 class="text-4xl md:text-5xl font-regular text-[#001a4d] font-poppins">
                 @if(isset($category))
-                    Kategori: {{ $category->name }}
+                    Kategori {{ $category->name }}
                 @elseif(isset($tag))
-                    Tag: {{ $tag->name }}
+                    Tag {{ $tag->name }}
                 @else
                     Artikel & Tips Perawatan Kulit
                 @endif
@@ -25,6 +32,7 @@
         </div>
     </div>
 </section>
+
 
 {{-- Main Content --}}
 <section class="relative -mt-20 pb-20">
