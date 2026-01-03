@@ -1,4 +1,3 @@
-{{-- resources/views/landing/pages/detail-produk.blade.php --}}
 @extends('landing.index')
 
 @section('content')
@@ -53,9 +52,7 @@
                     {{-- Action Buttons --}}
                     <div class="flex flex-col sm:flex-row gap-4 pt-4">
                         
-                        {{-- =================================================== --}}
-                        {{-- UPDATE: Tombol Beli Sekarang (Design Tetap Sama) --}}
-                        {{-- =================================================== --}}
+                        {{-- Tombol Beli Sekarang --}}
                         <button onclick="addToCart('{{ $product['slug'] }}')" 
                                 id="btn-add-to-cart"
                                 class="flex-1 inline-flex justify-center items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 font-poppins">
@@ -68,7 +65,7 @@
                             {{-- Text --}}
                             <span id="btn-text">Beli Sekarang</span>
 
-                            {{-- Loading Spinner (Hidden by default) --}}
+                            {{-- Loading Spinner --}}
                             <svg id="btn-loading" class="hidden w-5 h-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -115,7 +112,7 @@
 
             </div>
 
-            {{-- 3. BENEFITS SECTION (Mirip Treatment Detail) --}}
+            {{-- 3. BENEFITS SECTION --}}
             <div class="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-8 md:p-12 mb-20 border border-slate-100">
                 <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mb-8 font-poppins text-center">
                     Manfaat Utama
@@ -134,7 +131,7 @@
                 </div>
             </div>
 
-            {{-- 4. RELATED PRODUCTS (Menggunakan Component Product Card) --}}
+            {{-- 4. RELATED PRODUCTS --}}
             @if(count($relatedProducts) > 0)
             <div class="mb-20">
                 <div class="text-center mb-12">
@@ -144,7 +141,6 @@
                     </p>
                 </div>
 
-                {{-- Disini kita tetap pakai Product Card Component --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     @foreach($relatedProducts as $related)
                         @include('landing.components.product-card', [
@@ -159,7 +155,7 @@
             </div>
             @endif
 
-            {{-- 5. FINAL CTA (Sama seperti Treatment) --}}
+            {{-- 5. FINAL CTA --}}
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-12 text-center relative overflow-hidden shadow-2xl">
                 {{-- Decorative Elements --}}
                 <div class="absolute top-0 right-0 w-64 h-64 bg-pink-500 rounded-full opacity-10 -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
@@ -183,6 +179,38 @@
 
         </div>
     </section>
+
+    {{-- FLOATING CART BUTTON (BARU DITAMBAHKAN) --}}
+    <div x-data="{ count: 0 }"
+         x-init="$dispatch('cart-updated')" 
+         @update-cart-badge.window="count = $event.detail.count"
+         class="fixed bottom-8 right-8 z-40 print:hidden">
+        
+        <button @click="$dispatch('open-cart-modal')"
+                class="relative bg-[#001a4d] text-white p-4 rounded-full shadow-2xl hover:bg-blue-900 hover:scale-110 transition-all duration-300 group ring-4 ring-white/50">
+            
+            {{-- Icon Cart --}}
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+
+            {{-- Badge Count --}}
+            <span x-show="count > 0" 
+                  x-text="count" 
+                  x-transition:enter="transition ease-out duration-300"
+                  x-transition:enter-start="transform scale-0"
+                  x-transition:enter-end="transform scale-100"
+                  class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+            </span>
+
+             {{-- Tooltip Hover --}}
+             <span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-white text-[#001a4d] text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Lihat Keranjang
+            </span>
+        </button>
+    </div>
+    {{-- END FLOATING CART BUTTON --}}
+
     @include('landing.sections.footer')
 
     {{-- Script untuk Handle Add to Cart --}}
