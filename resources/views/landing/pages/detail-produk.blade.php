@@ -3,7 +3,8 @@
 
 @section('content')
     @include('landing.sections.header')
-      {{-- Hero Section with Breadcrumb --}}
+    
+    {{-- Hero Section with Breadcrumb --}}
     <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-[70vh] -mt-6 flex items-center">
         <div class="absolute inset-0 opacity-75">
             <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
@@ -51,12 +52,27 @@
 
                     {{-- Action Buttons --}}
                     <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                        {{-- Button Beli / Cart --}}
-                        <button class="flex-1 inline-flex justify-center items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 font-poppins">
+                        
+                        {{-- =================================================== --}}
+                        {{-- UPDATE: Tombol Beli Sekarang (Design Tetap Sama) --}}
+                        {{-- =================================================== --}}
+                        <button onclick="addToCart('{{ $product['slug'] }}')" 
+                                id="btn-add-to-cart"
+                                class="flex-1 inline-flex justify-center items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 font-poppins">
+                            
+                            {{-- Icon Cart --}}
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
-                            Beli Sekarang
+                            
+                            {{-- Text --}}
+                            <span id="btn-text">Beli Sekarang</span>
+
+                            {{-- Loading Spinner (Hidden by default) --}}
+                            <svg id="btn-loading" class="hidden w-5 h-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
                         </button>
 
                         {{-- Button WhatsApp --}}
@@ -168,4 +184,56 @@
         </div>
     </section>
     @include('landing.sections.footer')
+
+    {{-- Script untuk Handle Add to Cart --}}
+    <script>
+        function addToCart(slug) {
+            const btn = document.getElementById('btn-add-to-cart');
+            const btnText = document.getElementById('btn-text');
+            const btnLoading = document.getElementById('btn-loading');
+
+            // 1. UI Loading State
+            btn.disabled = true;
+            btnText.textContent = 'Menambahkan...';
+            btnLoading.classList.remove('hidden');
+
+            // 2. Kirim Request ke Controller
+            fetch('{{ route("cart.add") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    slug: slug,
+                    quantity: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 3. Trigger Modal Cart (Event ini akan ditangkap oleh Cart Modal di Layout)
+                    window.dispatchEvent(new CustomEvent('cart-updated'));
+                    window.dispatchEvent(new CustomEvent('open-cart-modal')); 
+                    
+                    // Reset Tombol
+                    setTimeout(() => {
+                        btnText.textContent = 'Berhasil!';
+                        setTimeout(() => {
+                            btn.disabled = false;
+                            btnText.textContent = 'Beli Sekarang';
+                            btnLoading.classList.add('hidden');
+                        }, 1000);
+                    }, 500);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btn.disabled = false;
+                btnText.textContent = 'Beli Sekarang';
+                btnLoading.classList.add('hidden');
+                alert('Gagal menambahkan ke keranjang.');
+            });
+        }
+    </script>
 @endsection
