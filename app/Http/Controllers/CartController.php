@@ -132,7 +132,7 @@ class CartController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255', // with validasi input
             'email' => 'required|email',
             'phone' => 'required|string',
             'address' => 'required|string',
@@ -151,7 +151,7 @@ class CartController extends Controller
         $subtotal = 0;
 
         foreach ($cartItems as $item) {
-            $product = $this->productService->getProductBySlug($item['slug']);
+            $product = $this->productService->getProductBySlug($item['slug']); // aman
             if ($product) {
                 $itemTotal = $product['price'] * $item['quantity'];
                 $items[] = [

@@ -63,7 +63,7 @@ class TreatmentDataService
             "short_description" => "Perawatan dasar untuk membersihkan wajah secara menyeluruh",
             "description" => "Perawatan facial dasar yang fokus pada pembersihan mendalam (deep cleansing), massage wajah, dan ekstraksi komedo ringan.",
             "long_description" => "Facial Only adalah langkah awal yang sempurna untuk menjaga kebersihan kulit. Mencakup pembersihan ganda, scrub ringan, pemijatan relaksasi, pengambilan komedo, dan masker penenang.",
-            "image" => asset("images/produk1.jpeg"), // Ganti dengan foto facial
+            "image" => asset("images/treatment/facial-acne.png"), // Ganti dengan foto facial
             "tags" => ["Facial", "Basic", "Cleansing"],
             "benefits" => ["Membersihkan pori-pori", "Relaksasi otot wajah", "Kulit lebih segar"],
             "process" => [
@@ -88,7 +88,7 @@ class TreatmentDataService
             "short_description" => "Facial lengkap dengan serum dan teknologi HF",
             "description" => "Upgrade dari facial biasa dengan penambahan serum premium dan penggunaan alat High Frequency untuk sterilisasi.",
             "long_description" => "Facial Premium memberikan perawatan lebih intensif dengan tambahan serum vitamin dan alat khusus untuk memastikan nutrisi menyerap sempurna ke dalam kulit.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/facial-premium.png"), // Ganti dengan foto facial
             "tags" => ["Facial", "Premium", "Nutrisi"],
             "benefits" => ["Nutrisi lebih maksimal", "Mencegah jerawat", "Kulit lebih kenyal"],
             "process" => [
@@ -113,7 +113,7 @@ class TreatmentDataService
             "short_description" => "Mencerahkan wajah kusam dengan Vitamin C murni",
             "description" => "Facial yang diformulasikan khusus untuk mencerahkan kulit kusam dan memudarkan bekas jerawat menggunakan Vitamin C konsentrasi tinggi.",
             "long_description" => "Kombinasi teknik facial dengan infus Vitamin C murni yang efektif sebagai antioksidan, mencerahkan warna kulit, dan meningkatkan produksi kolagen.",
-            "image" => asset("images/produk3.jpeg"),
+            "image" => asset("images/treatment/facial-vitc.png"),
             "tags" => ["Facial", "Brightening", "Vitamin C"],
             "benefits" => ["Mencerahkan kulit instan", "Antioksidan tinggi", "Memudarkan noda hitam"],
             "process" => [
@@ -140,7 +140,7 @@ class TreatmentDataService
             "short_description" => "Mengangkat sel kulit mati dengan cairan khusus",
             "description" => "Eksfoliasi kulit menggunakan larutan kimia aman untuk memperbaiki tekstur kulit dan mengangkat sel kulit mati.",
             "long_description" => "Chemical peeling membantu regenerasi kulit dengan cara mengelupaskan lapisan kulit terluar yang rusak, merangsang pertumbuhan kulit baru yang lebih halus.",
-            "image" => asset("images/produk1.jpeg"),
+            "image" => asset("images/treatment/peeling-chamical.png"),
             "tags" => ["Peeling", "Exfoliation", "Resurfacing"],
             "benefits" => ["Kulit lebih halus", "Mengurangi kerutan halus", "Mencerahkan"],
             "process" => [
@@ -165,7 +165,7 @@ class TreatmentDataService
             "short_description" => "Mengeringkan jerawat dan mengurangi minyak",
             "description" => "Peeling khusus dengan Salicylic Acid untuk mengatasi jerawat meradang dan mengontrol minyak berlebih.",
             "long_description" => "Sangat efektif untuk mematikan bakteri jerawat, membuka pori-pori yang tersumbat, dan mengurangi peradangan pada jerawat aktif.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/peeling-acne.png"),
             "tags" => ["Peeling", "Acne", "Oil Control"],
             "benefits" => ["Mengeringkan jerawat", "Mengontrol minyak", "Membersihkan komedo"],
             "process" => [
