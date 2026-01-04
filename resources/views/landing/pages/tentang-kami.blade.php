@@ -30,7 +30,7 @@
                 {{-- Image Side --}}
                 <div class="relative h-64 md:h-auto min-h-[400px]">
                     <img
-                        src="{{ asset('images/about-clinic.jpg') }}"
+                        src="{{ asset('images/produk8.jpeg') }}"
                         alt="SkinLogic Clinic"
                         class="w-full h-full object-cover"
                     />
