@@ -63,7 +63,7 @@ class TreatmentDataService
             "short_description" => "Perawatan dasar untuk membersihkan wajah secara menyeluruh",
             "description" => "Perawatan facial dasar yang fokus pada pembersihan mendalam (deep cleansing), massage wajah, dan ekstraksi komedo ringan.",
             "long_description" => "Facial Only adalah langkah awal yang sempurna untuk menjaga kebersihan kulit. Mencakup pembersihan ganda, scrub ringan, pemijatan relaksasi, pengambilan komedo, dan masker penenang.",
-            "image" => asset("images/produk1.jpeg"), // Ganti dengan foto facial
+            "image" => asset("images/treatment/facial-acne.png"), // Ganti dengan foto facial
             "tags" => ["Facial", "Basic", "Cleansing"],
             "benefits" => ["Membersihkan pori-pori", "Relaksasi otot wajah", "Kulit lebih segar"],
             "process" => [
@@ -88,7 +88,7 @@ class TreatmentDataService
             "short_description" => "Facial lengkap dengan serum dan teknologi HF",
             "description" => "Upgrade dari facial biasa dengan penambahan serum premium dan penggunaan alat High Frequency untuk sterilisasi.",
             "long_description" => "Facial Premium memberikan perawatan lebih intensif dengan tambahan serum vitamin dan alat khusus untuk memastikan nutrisi menyerap sempurna ke dalam kulit.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/facial-premium.png"), // Ganti dengan foto facial
             "tags" => ["Facial", "Premium", "Nutrisi"],
             "benefits" => ["Nutrisi lebih maksimal", "Mencegah jerawat", "Kulit lebih kenyal"],
             "process" => [
@@ -113,7 +113,7 @@ class TreatmentDataService
             "short_description" => "Mencerahkan wajah kusam dengan Vitamin C murni",
             "description" => "Facial yang diformulasikan khusus untuk mencerahkan kulit kusam dan memudarkan bekas jerawat menggunakan Vitamin C konsentrasi tinggi.",
             "long_description" => "Kombinasi teknik facial dengan infus Vitamin C murni yang efektif sebagai antioksidan, mencerahkan warna kulit, dan meningkatkan produksi kolagen.",
-            "image" => asset("images/produk3.jpeg"),
+            "image" => asset("images/treatment/facial-vitc.png"),
             "tags" => ["Facial", "Brightening", "Vitamin C"],
             "benefits" => ["Mencerahkan kulit instan", "Antioksidan tinggi", "Memudarkan noda hitam"],
             "process" => [
@@ -140,7 +140,7 @@ class TreatmentDataService
             "short_description" => "Mengangkat sel kulit mati dengan cairan khusus",
             "description" => "Eksfoliasi kulit menggunakan larutan kimia aman untuk memperbaiki tekstur kulit dan mengangkat sel kulit mati.",
             "long_description" => "Chemical peeling membantu regenerasi kulit dengan cara mengelupaskan lapisan kulit terluar yang rusak, merangsang pertumbuhan kulit baru yang lebih halus.",
-            "image" => asset("images/produk1.jpeg"),
+            "image" => asset("images/treatment/peeling-chamical.png"),
             "tags" => ["Peeling", "Exfoliation", "Resurfacing"],
             "benefits" => ["Kulit lebih halus", "Mengurangi kerutan halus", "Mencerahkan"],
             "process" => [
@@ -165,7 +165,7 @@ class TreatmentDataService
             "short_description" => "Mengeringkan jerawat dan mengurangi minyak",
             "description" => "Peeling khusus dengan Salicylic Acid untuk mengatasi jerawat meradang dan mengontrol minyak berlebih.",
             "long_description" => "Sangat efektif untuk mematikan bakteri jerawat, membuka pori-pori yang tersumbat, dan mengurangi peradangan pada jerawat aktif.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/peeling-acne.png"),
             "tags" => ["Peeling", "Acne", "Oil Control"],
             "benefits" => ["Mengeringkan jerawat", "Mengontrol minyak", "Membersihkan komedo"],
             "process" => [
@@ -190,7 +190,7 @@ class TreatmentDataService
             "short_description" => "Rahasia kulit glass skin ala Korea",
             "description" => "Peeling inovasi terbaru untuk hasil kulit glowing, halus, dan bening seperti kaca (Glass Skin).",
             "long_description" => "Menggunakan formulasi peeling yang lembut namun efektif mengangkat sel kulit mati sekaligus memberikan hidrasi, sehingga kulit langsung terlihat glowing tanpa pengelupasan ekstrim.",
-            "image" => asset("images/produk3.jpeg"),
+            "image" => asset("images/treatment/peeling-korea.png"),
             "tags" => ["Peeling", "Glass Skin", "Glowing"],
             "benefits" => ["Efek Glass Skin", "Pori-pori samar", "Tidak merah berlebihan"],
             "process" => [
@@ -215,7 +215,7 @@ class TreatmentDataService
             "short_description" => "Peeling alami untuk kulit sensitif dan kering",
             "description" => "Menggunakan ekstrak fermentasi madu untuk eksfoliasi yang sangat lembut sekaligus melembabkan.",
             "long_description" => "Cocok untuk kulit yang tidak tahan peeling kimia keras. Madu memiliki sifat antibakteri dan humektan alami yang menjaga kelembaban kulit.",
-            "image" => asset("images/produk1.jpeg"),
+            "image" => asset("images/treatment/peeling-madu.png"),
             "tags" => ["Peeling", "Natural", "Sensitive Skin"],
             "benefits" => ["Melembabkan", "Mencerahkan lembut", "Aman untuk kulit sensitif"],
             "process" => [
@@ -240,7 +240,7 @@ class TreatmentDataService
             "short_description" => "Memudarkan flek hitam membandel",
             "description" => "Peeling konsentrasi khusus (TCA/Glycolic) untuk menargetkan pigmentasi dan noda hitam.",
             "long_description" => "Bekerja pada lapisan kulit yang lebih dalam untuk memecah melanin yang menumpuk, efektif untuk melasma dan bekas jerawat menghitam.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/peeling-flek.png"),
             "tags" => ["Peeling", "Flek", "Melasma"],
             "benefits" => ["Memudarkan flek", "Meratakan warna kulit", "Peremajaan kulit"],
             "process" => [
@@ -267,7 +267,7 @@ class TreatmentDataService
             "short_description" => "Peremajaan kulit dengan teknologi cahaya",
             "description" => "Intense Pulsed Light (IPL) untuk merangsang kolagen dan mencerahkan wajah.",
             "long_description" => "Perawatan non-invasif menggunakan cahaya spektrum luas untuk memperbaiki tekstur kulit, mengecilkan pori, dan memberikan efek cerah.",
-            "image" => asset("images/produk3.jpeg"),
+            "image" => asset("images/treatment/ipl-rejuve.png"),
             "tags" => ["Laser", "IPL", "Rejuve"],
             "benefits" => ["Mencerahkan", "Kenyal", "Pori kecil"],
             "process" => [
@@ -292,7 +292,7 @@ class TreatmentDataService
             "short_description" => "Membunuh bakteri jerawat dengan cahaya",
             "description" => "Menggunakan filter cahaya khusus IPL yang menargetkan bakteri P. Acnes penyebab jerawat.",
             "long_description" => "Sangat efektif untuk jerawat meradang. Cahaya IPL akan memanaskan kelenjar sebaceous untuk mengurangi produksi minyak dan membunuh kuman.",
-            "image" => asset("images/produk1.jpeg"),
+            "image" => asset("images/treatment/ipl-acne.png"),
             "tags" => ["Laser", "IPL", "Acne"],
             "benefits" => ["Keringkan jerawat", "Bunuh bakteri", "Kurangi merah"],
             "process" => [
@@ -317,7 +317,7 @@ class TreatmentDataService
             "short_description" => "Hair Removal ketiak permanen",
             "description" => "Menghilangkan bulu ketiak secara permanen menggunakan teknologi IPL/Laser.",
             "long_description" => "Mematikan akar rambut sehingga bulu tumbuh makin halus dan akhirnya hilang permanen. Ketiak juga jadi lebih cerah.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/hr-under-arm.png"),
             "tags" => ["Laser", "Hair Removal", "Ketiak"],
             "benefits" => ["Bebas bulu", "Ketiak cerah", "Tidak sakit"],
             "process" => [
@@ -342,7 +342,7 @@ class TreatmentDataService
             "short_description" => "Mencerahkan bibir gelap",
             "description" => "Laser khusus untuk memecah pigmen gelap pada bibir agar kembali merah alami.",
             "long_description" => "Solusi bagi perokok atau faktor genetik yang memiliki bibir hitam. Laser Q-switch ND yag memecah melanin di bibir.",
-            "image" => asset("images/produk3.jpeg"),
+            "image" => asset("images/treatment/laser-dark-lips.png"),
             "tags" => ["Laser", "Lips", "Pink Lips"],
             "benefits" => ["Bibir cerah alami", "Mengurangi hitam", "Pink natural"],
             "process" => [
@@ -367,7 +367,7 @@ class TreatmentDataService
             "short_description" => "Black Doll Laser untuk pori dan cerah",
             "description" => "Menggunakan masker karbon hitam yang ditembak laser untuk mengangkat komedo, minyak, dan sel kulit mati.",
             "long_description" => "Sangat populer untuk mengecilkan pori-pori dan membuat wajah instan glowing dan halus seketika.",
-            "image" => asset("images/produk1.jpeg"),
+            "image" => asset("images/treatment/laser-carbon.png"),
             "tags" => ["Laser", "Karbon", "Pori Besar"],
             "benefits" => ["Pori kecil", "Minyak berkurang", "Wajah halus"],
             "process" => [
@@ -392,7 +392,7 @@ class TreatmentDataService
             "short_description" => "Menghilangkan flek hitam dengan akurat",
             "description" => "Laser dengan panjang gelombang spesifik untuk menghancurkan pigmen melanin penyebab flek.",
             "long_description" => "Laser Q-Switch Nd:YAG menargetkan noda hitam tanpa merusak kulit sekitarnya, flek akan mengering dan lepas sendirinya.",
-            "image" => asset("images/produk2.jpeg"),
+            "image" => asset("images/treatment/laser-flek.png"),
             "tags" => ["Laser", "Flek", "Melasma"],
             "benefits" => ["Flek pudar", "Wajah bersih", "Rata warna kulit"],
             "process" => [
@@ -417,7 +417,7 @@ class TreatmentDataService
             "short_description" => "Hapus tato permanen",
             "description" => "Menghapus gambar tato permanen atau sulam alis yang gagal.",
             "long_description" => "Memecah partikel tinta tato menjadi butiran mikro yang akan dibuang oleh sistem imun tubuh.",
-            "image" => asset("images/produk3.jpeg"),
+            "image" => asset("images/treatment/laser-tatto.png"),
             "tags" => ["Laser", "Tato", "Removal"],
             "benefits" => ["Tato hilang", "Aman", "Minim bekas"],
             "process" => [

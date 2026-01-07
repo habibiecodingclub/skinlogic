@@ -5,22 +5,17 @@
     @include('landing.sections.header')
 
     {{-- Hero Section Perawatan --}}
-    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-[70vh] -mt-6 flex items-center">
+    <section class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 h-[420px] -mt-6 flex items-center overflow-hidden">
 
         <div class="absolute inset-0 opacity-75">
             <div class="absolute inset-0" style="background-image: url('{{ asset('images/herosection-on-detail.png') }}'); background-size: cover;"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-regular text-gray-900 mb-4 font-poppins hover:text-white transition-colors">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
+            <div class="text-center relative top-6 md:top-10">
+                <h1 class="text-4xl md:text-5xl font-regular text-[#001a4d] mb-4 font-poppins hover:text-white transition-colors">
                     Perawatan
                 </h1>
-                <div class="flex items-center justify-center gap-2 text-gray-900">
-                    <a href="/" class="hover:text-white transition-colors">Home</a>
-                    <span>/</span>
-                    <span class="text-gray-900 font-regular font-poppins hover:text-white transition-colors">Perawatan</span>
-                </div>
             </div>
         </div>
     </section>
